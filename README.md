@@ -1,40 +1,31 @@
-# CMP-N204 Community Sharing Platform
+# CMP-N204 Community Sharing App
 
-## Project Overview
-This project is a full-stack, database-driven web application developed as part of the
-**Software Engineering (CMP-N204)** module.  
-The application is designed around the theme **“Sharing, exchange and building community”**.
+This repository contains the coursework project for the **Software Engineering (CMP-N204)** module.
 
-The goal is to create a platform where users can share resources, skills, or support
-co-operatively for mutual benefit rather than financial gain.
+The project is a small full-stack web application based on the theme  
+**“Sharing, exchange and building community”**.
 
-At this stage (Sprint 1), the focus is on **project setup, workflow, and development environment configuration**.
+The aim is to build a platform where users can share resources, skills or support with each
+other in a cooperative way, rather than for direct financial gain.
 
----
-
-## Project Status
-- Sprint: **Sprint 1 – Project Setup**
-- Team status: **Solo development (awaiting group allocation on 5 February 2026)**
-- Methodology: **Scrum / Iterative development**
+At the moment, the project is in **Sprint 1**, which focuses on setting up the development
+environment and project workflow.
 
 ---
 
-## Technology Stack
-
-### Backend
-- Node.js
-- Express.js
-
-### Database
-- MySQL 8
-
-### DevOps / Tooling
-- Docker
-- Docker Compose
-- Git
-- GitHub Projects (Kanban board)
+## Current status
+- Sprint: **Sprint 1 – Setup**
+- Team: **Solo work (group to be formed during lab on 5 February 2026)**
+- Development approach: **Scrum / iterative development**
 
 ---
 
-## Project Structure
+## Tech stack
 
+- **Backend:** Node.js, Express.js  
+- **Database:** MySQL  
+- **DevOps / tools:** Docker, Docker Compose, Git, GitHub Projects
+
+---
+
+## Folder structure
