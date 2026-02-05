@@ -15,7 +15,7 @@ environment and project workflow.
 
 ## Current status
 - Sprint: **Sprint 1 – Setup**
-- Team: **Solo work (group to be formed during lab on 5 February 2026)**
+- Team: **Oleksii Ivanov, Mehedi Hasan Rakib**
 - Development approach: **Scrum / iterative development**
 
 ---
