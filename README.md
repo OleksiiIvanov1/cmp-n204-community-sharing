@@ -38,5 +38,5 @@ No functional features were implemented during this sprint.
 
 ## Individual Contributions
 
-- [Mehedi Hasan Rakib – Sprint 1 Contribution](docs/mehedi-sprint1.md)
+- [Mehedi Hasan Rakib – Sprint 1 Contribution](docs/mehedi-contribution.md)
 
