@@ -1,31 +1,25 @@
-# CMP-N204 Community Sharing App
+---
 
-This repository contains the coursework project for the **Software Engineering (CMP-N204)** module.
+## Sprint 1 – Individual Contribution (Mehedi Hasan Rakib)
 
-The project is a small full-stack web application based on the theme  
-**“Sharing, exchange and building community”**.
+**Student ID:** A00022820  
+**Email:** rakibm@roehampton.ac.uk  
 
-The aim is to build a platform where users can share resources, skills or support with each
-other in a cooperative way, rather than for direct financial gain.
-
-At the moment, the project is in **Sprint 1**, which focuses on setting up the development
-environment and project workflow.
+### Contribution Summary
+- Verified the local development environment for the project.
+- Confirmed the Express server runs successfully on port 3000.
+- Tested Docker and Docker Compose setup for team consistency.
+- Configured Git identity to ensure correct commit authorship.
+- Contributed to Sprint 1 planning and documentation.
 
 ---
 
-## Current status
-- Sprint: **Sprint 1 – Setup**
-- Team: **Oleksii Ivanov, Mehedi Hasan Rakib**
-- Development approach: **Scrum / iterative development**
+## Sprint 1 Scope
 
----
+Sprint 1 focused on project setup and preparation, including:
+- GitHub repository and project board setup
+- Docker-based development environment
+- Initial Express server configuration
+- Team coordination and documentation
 
-## Tech stack
-
-- **Backend:** Node.js, Express.js  
-- **Database:** MySQL  
-- **DevOps / tools:** Docker, Docker Compose, Git, GitHub Projects
-
----
-
-## Folder structure
+No functional features were implemented during this sprint.
