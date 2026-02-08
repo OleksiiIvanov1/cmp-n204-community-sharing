@@ -13,7 +13,7 @@
 - Contributed to Sprint 1 planning and documentation. 
 
 ---
-
+ 
 ## Sprint 1 Scope
 
 Sprint 1 focused on project setup and preparation, including:
