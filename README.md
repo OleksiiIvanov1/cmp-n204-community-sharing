@@ -1,21 +1,42 @@
-## Sprint 1 – Individual Contribution (Mehedi Hasan Rakib)
+## Project Overview
 
-**Student ID:** A00022820  
-**Email:** rakibm@roehampton.ac.uk  
+The CMP-N204 Community Sharing App is a Node.js and Express-based web application
+designed to support community-based sharing of resources.  
+The project is developed as part of the CMP-N204 Software Engineering module,
+using Agile methods and sprint-based development.
 
-### Contribution Summary
-- Verified the local development environment for the project.
-- Confirmed the Express server runs successfully on port 3000.
-- Tested Docker and Docker Compose setup for team consistency.
-- Configured Git identity to ensure correct commit authorship.
-- Contributed to Sprint 1 planning and documentation.
+## Team Members
+
+- Oleksii Ivanov  
+- Mehedi Hasan Rakib
+
+## Technology Stack
+
+- Node.js
+- Express.js
+- Docker
+- Docker Compose
+- GitHub
+
+## Project Structure
+
+- `src/` – Application source code
+- `docs/` – Sprint documentation and individual contributions
+- `docker/` – Docker configuration files
+- `docker-compose.yml` – Multi-container setup
 
 ## Sprint 1 Scope
 
 Sprint 1 focused on project setup and preparation, including:
+
 - GitHub repository and project board setup
 - Docker-based development environment
 - Initial Express server configuration
 - Team coordination and documentation
 
 No functional features were implemented during this sprint.
+
+## Individual Contributions
+
+- [Mehedi Hasan Rakib – Sprint 1 Contribution](docs/mehedi-sprint1.md)
+
