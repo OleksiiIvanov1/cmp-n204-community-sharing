@@ -10,7 +10,7 @@
 - Confirmed the Express server runs successfully on port 3000.
 - Tested Docker and Docker Compose setup for team consistency.
 - Configured Git identity to ensure correct commit authorship.
-- Contributed to Sprint 1 planning and documentation.
+- Contributed to Sprint 1 planning and documentation. 
 
 ---
 
