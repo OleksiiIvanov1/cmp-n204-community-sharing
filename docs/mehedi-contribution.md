@@ -6,9 +6,7 @@ As part of Sprint 1 planning, I took responsibility for refining the personas to
 
 **Name:** Calvin Souza  
 **Age:** 21  
-**Role:** University Student  
-
-Role: University Student   
+**Role:** University Student    
 
 | Aspect | Description |
 | --- | --- |
