@@ -10,30 +10,14 @@ As part of Sprint 1 planning, I took responsibility for refining the personas to
 
 Role: University Student   
 
-Aspect 
+| Aspect | Description |
+| --- | --- |
+| Goals | Find shared resources or support such as study help or temporary access to items |
+| Needs | Simple navigation, clear listings, and quick communication |
+| Concerns | Trust and safety when interacting with unknown users |
+| Motivation | Access support efficiently within the student community |
 
-Description 
-
-Goals 
-
-Find shared resources or support, such as study help or temporary access to items 
-
-Needs 
-
-Simple navigation, clear listings, quick way to contact other users 
-
-Concerns 
-
-Trust and safety when interacting with unknown users 
-
-Motivation 
-
-Save time and access support within the student community 
-
-  
-This persona helped guide decisions around simplicity of design and clarity of information during Sprint 1.
-
----
+  This persona helped guide decisions around simplicity of design and clarity of information during Sprint 1.
 
 ### Persona 2: User Offering Skills or Resources
 
@@ -41,27 +25,11 @@ This persona helped guide decisions around simplicity of design and clarity of i
 **Age:** 28  
 **Role:** Senior Student / Working Professional  
 
-
-Aspect 
-
-Description 
-
-Goals 
-
-Offer skills, resources, or support to others in the community 
-
-Needs 
-
-Easy way to create and manage listings, clear communication 
-
-Concerns 
-
-Misuse of the platform and unclear expectations 
-
-Motivation 
-
-Contribute positively to the community in a structured way  
-
-
+| Aspect | Description |
+| --- | --- |
+| Goals | Offer skills, resources, or support to others |
+| Needs | Easy listing creation and clear communication |
+| Concerns | Misuse of the platform or unclear expectations |
+| Motivation | Contribute positively to the community in a structured way |
 
 This persona informed planning discussions related to listing management, communication clarity, and future moderation considerations.
