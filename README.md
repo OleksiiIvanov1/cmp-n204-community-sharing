@@ -9,6 +9,7 @@ using Agile methods and sprint-based development.
 
 - Oleksii Ivanov  
 - Mehedi Hasan Rakib
+- Shannel Keny Rodrigues
 
 ## Technology Stack
 
