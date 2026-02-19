@@ -110,10 +110,15 @@ No application features have been implemented yet, as Sprint 1 focuses on projec
 
 ## Repository Structure 
 /app → Express application files
+
 /db → Database files
+
 Dockerfile → Node.js container configuration
+
 docker-compose.yml → Service configuration
+
 package.json → Project dependencies
+
 README.md → Project documentation
 
 
