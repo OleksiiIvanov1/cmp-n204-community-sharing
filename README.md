@@ -61,6 +61,7 @@ Using Docker ensures that:
 
 ### 2. Clone the Repository
 git clone https://github.com/OleksiiIvanov1/cmp-n204-community-sharing.git
+
 cd cmp-n204-community-sharing
 
 ### 3. Build and Start Containers
