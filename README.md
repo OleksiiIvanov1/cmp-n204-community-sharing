@@ -1,5 +1,11 @@
 # Community Share  
 CMP-N204 Software Engineering – Sprint 1  
+# Authors
+Oleksii Ivanov - A00034498
+
+Mehedi Hasan Rakib - A00022820
+
+Shannel Keny Rodrigues - A00025655
 
 ## Project Overview
 
@@ -110,9 +116,3 @@ package.json → Project dependencies
 README.md → Project documentation
 
 
-## Authors
-Oleksii Ivanov - A00034498
-
-Mehedi Hasan Rakib - A00022820
-
-Shannel Keny Rodrigues - A00025655
