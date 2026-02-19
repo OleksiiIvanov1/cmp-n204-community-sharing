@@ -55,3 +55,49 @@ Using Docker ensures that:
 - Docker Desktop installed and running  
 
 ### 2. Clone the Repository
+
+### 3. Build and Start Containers
+
+
+### 4. Access the Application
+
+- Express application:  
+  http://localhost:3000  
+
+- phpMyAdmin:  
+  http://localhost:8081  
+
+---
+
+## Environment Variables
+
+The project uses a `.env` file to store database credentials.
+
+An example file (`env-sample`) is included in the repository.
+
+To configure locally:
+
+1. Copy `env-sample`
+2. Rename it to `.env`
+3. Adjust credentials if necessary
+
+The `.env` file is excluded via `.gitignore` for security reasons.
+
+---
+
+## Current Sprint Status – Sprint 1
+
+The following requirements have been completed:
+
+- GitHub repository created  
+- GitHub Project Kanban board created  
+- Product backlog initiated  
+- Scaffolding files added  
+- Docker development environment configured  
+- All team members able to run the environment locally  
+
+No application features have been implemented yet, as Sprint 1 focuses on project setup and workflow preparation.
+
+---
+
+## Repository Structure (Simplified)
