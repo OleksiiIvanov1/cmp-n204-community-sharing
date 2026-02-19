@@ -1,8 +1,18 @@
-MYSQL_HOST=localhost
-MYSQL_USER=admin
-MYSQL_PASS=password
-MYSQL_ROOT_PASSWORD=password
-MYSQL_DATABASE=sd2-db
-MYSQL_ROOT_USER=root
-DB_CONTAINER=db
-DB_PORT=3306
+{
+    "name": "community-share",
+    "version": "1.0.0",
+    "description": "Community sharing platform - Sprint 1 setup",
+    "main": "index.js",
+    "scripts": {
+      "start": "supervisor index.js"
+    },
+    "author": "Community Share Group",
+    "license": "ISC",
+    "dependencies": {
+      "dotenv": "^10.0.0",
+      "express": "^4.17.1",
+      "mysql2": "^2.3.0",
+      "supervisor": "^0.12.0"
+    }
+  }
+  
