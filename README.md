@@ -34,7 +34,6 @@ Sprint 1 focused on project setup and preparation, including:
 - Docker-based development environment
 - Initial Express server configuration
 - Team coordination and documentation
-
 No functional features were implemented during this sprint.
 
 ## Individual Contributions
