@@ -14,10 +14,9 @@ During Sprint 1, the focus has been on setting up the development workflow, conf
 ## Technologies Used
 
 ### Frontend
-- HTML  
-- CSS  
+- JavaScript   
+- HTML
 - JavaScript  
-- PUG (templating system)
 
 ### Backend
 - Node.js  
