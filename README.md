@@ -55,9 +55,11 @@ Using Docker ensures that:
 - Docker Desktop installed and running  
 
 ### 2. Clone the Repository
+git clone https://github.com/OleksiiIvanov1/cmp-n204-community-sharing.git
+cd cmp-n204-community-sharing
 
 ### 3. Build and Start Containers
-
+docker-compose up --build
 
 ### 4. Access the Application
 
@@ -100,4 +102,14 @@ No application features have been implemented yet, as Sprint 1 focuses on projec
 
 ---
 
-## Repository Structure (Simplified)
+## Repository Structure 
+/app → Express application files
+/db → Database files
+Dockerfile → Node.js container configuration
+docker-compose.yml → Service configuration
+package.json → Project dependencies
+README.md → Project documentation
+
+
+## Authors
+Oleksii Ivanov
