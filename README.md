@@ -1,6 +1,6 @@
 # Community Share  
 CMP-N204 Software Engineering – Sprint 1  
-# Authors
+### Authors
 Oleksii Ivanov - A00034498
 
 Mehedi Hasan Rakib - A00022820
