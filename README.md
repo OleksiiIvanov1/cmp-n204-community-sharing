@@ -111,4 +111,6 @@ README.md → Project documentation
 
 
 ## Authors
-Oleksii Ivanov
+Oleksii Ivanov - A00034498
+Mehedi Hasan Rakib - A00022820
+Shannel Keny Rodrigues - A00025655
