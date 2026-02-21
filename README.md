@@ -7,6 +7,7 @@ Mehedi Hasan Rakib - A00022820
 
 Shannel Keny Rodrigues - A00025655
 
+Abbas Mohamad - A00041006
 ## Project Overview
 
 Community Share is a full-stack web application developed as part of the Software Engineering module (CMP-N204).
