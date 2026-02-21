@@ -53,3 +53,4 @@ By signing below, group members confirm their commitment to this Code of Conduct
 | Oleksii Ivanov | 08/02/2026 | Oleksii |
 | Mehedi Hasan Rakib | 09/02/2026 | Rakib |
 | Shannel Keny Rodrigues | 09/02/2026 | shannelkr |
+| Abbas Mohamed | 19/02/2026 | A Mohamed |
