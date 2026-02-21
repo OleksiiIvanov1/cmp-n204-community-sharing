@@ -1,0 +1,157 @@
+CMP-N204 Software Engineering
+Sprint 1 Documentation
+Group Name
+Community Share
+Group Members
+Oleksii Ivanov - A00034498
+Mehedi Hasan Rakib - A00022820
+Shannel Keny Rodrigues - A00025655
+Project Description
+The aim of this project is to develop a full-stack web application based on the theme
+“Sharing, exchange and building community”. The application is designed to support
+cooperative sharing of resources, skills, or support between users for mutual benefit.
+The project focuses on creating a database-driven platform where users can create
+profiles, browse shared listings, and connect with other users. The backend of the
+system is implemented using Node.js and Express.js, with MySQL used for persistent
+data storage. Docker is used to provide a consistent development environment,
+allowing all team members to run the application locally using the same configuration.
+During Sprint 1, the focus of the group has been on project planning, repository setup,
+and development environment configuration rather than implementing application
+features.
+Code of Conduct
+All group members agree to follow the rules outlined below for the duration of the
+project to ensure fair contribution, clear communication, and a professional working
+environment.
+Commitment to Tasks
+Each member is responsible for completing the tasks assigned to them within the
+agreed timeframe. Tasks will be assigned and tracked using the GitHub Project board.
+All members are expected to actively contribute and make consistent progress.
+Communication
+Group members must always communicate respectfully and professionally. If a
+member anticipates difficulty completing a task on time, they must inform the group in
+advance and propose a revised plan or deadline.
+Accountability
+To maintain fairness and transparency, the group adopts the following accountability
+process:
+• First strike: An assigned task is not completed without prior communication. The
+issue will be discussed within the group to clarify expectations and support
+completion.
+• Second strike: Repeated failure to complete tasks or communicate responsibly.
+The issue will be recorded in the meeting notes and tasks may be reassigned if
+necessary.
+• Third strike: Continued lack of contribution. The matter will be escalated to the
+module tutor, supported by evidence from GitHub commits, project boards, and
+meeting records.
+Fair Contribution
+All members are expected to contribute a reasonable and balanced share of work.
+Consistently missing deadlines or relying on others to complete assigned tasks is not
+acceptable.
+Respect and Professional Behaviour
+All members must treat each other with respect. Disrespectful behaviour, including
+dismissive communication, hostility, or undermining others, will not be tolerated. Any
+disagreements should be addressed calmly and constructively.
+Escalation
+If issues cannot be resolved internally, the group reserves the right to escalate the
+matter to the module team in accordance with module procedures.
+Agreement
+By signing below, group members confirm their commitment to this Code of Conduct.
+Oleksii Ivanov Date: 08/02/2026 Signature: Oleksii
+Mehedi Hasan Rakib Date: 09/02/2026 Signature: Rakib
+Shannel Keny Rodrigues Date: 09/02/2026 Signature: shannelkr
+Personas
+To support user-centred planning, the group defined two personas that represent
+typical users of a community sharing platform. These personas were used during Sprint
+1 to guide early design discussions and ensure the system is accessible, safe, and easy
+to use.
+Persona 1: Student Seeking Support or Shared Resources
+Name: Calvin Souza
+Age: 21
+Role: University Student
+Aspect Description
+Goals Find shared resources or support, such as study help or temporary
+access to items
+Needs Simple navigation, clear listings, quick way to contact other users
+Concerns Trust and safety when interacting with unknown users
+Motivation Save time and access support within the student community
+This persona influenced early planning decisions around simplicity, clarity of
+information, and the need for responsible user interaction.
+Persona 2: User Offering Skills or Resources
+Name: Meason Silveira
+Age: 28
+Role: Senior Student / Working Professional
+Aspect Description
+Goals Offer skills, resources, or support to others in the community
+Needs Easy way to create and manage listings, clear communication
+Concerns Misuse of the platform and unclear expectations
+Motivation Contribute positively to the community in a structured way
+This persona informed discussions around listing management, communication clarity,
+and future moderation considerations.
+These personas were used throughout Sprint 1 planning to maintain focus on usability,
+accessibility, and ethical use of the platform, and they will continue to guide design
+decisions in later sprints.
+Ethical Issues
+Several ethical considerations were identified during the planning stage of the project.
+User data privacy is an important concern, and the application should only collect and
+store information that is necessary for its functionality. User safety must also be
+considered, particularly in relation to inappropriate behaviour or misuse of the platform.
+Fair access is another key issue, ensuring that the application is inclusive and does not
+disadvantage groups of users. As the project develops, suitable moderation and
+reporting mechanisms will need to be considered.
+Addressing these issues during Sprint 1 helps ensure ethical considerations are
+embedded into the system design from an early stage.
+Meeting Records
+An initial planning meeting was held on 4 February 2026 to review the Sprint 1
+requirements, agree on a preliminary project idea, and plan the overall structure of the
+application. During this meeting, the GitHub repository was created, and an initial
+Kanban board was set up to manage tasks.
+A second meeting took place on 5 February 2026 and focused on technical setup.
+During this session, the Docker-based development environment was implemented, an
+Express server was configured, and the application was successfully run locally using
+Docker.
+Individual Contributions
+Mehedi Hasan Rakib (A00022820)
+During Sprint 1, my primary contribution focused on improving the quality and clarity of
+the project documentation, supporting GitHub organisation, and assisting with the
+initial technical setup. I took responsibility for structuring the Sprint 1 documentation in
+a clear and logical way so that it aligns closely with the assessment requirements and is
+easy for both markers and team members to follow.
+I contributed to writing and refining key planning sections, including the project
+description, personas, ethical considerations, and meeting records. My focus was on
+ensuring these sections accurately reflect the group’s discussions and planning 
+decisions, while keeping the level of technical detail appropriate for Sprint 1, which is
+centred on preparation rather than feature development.
+In addition, I created and maintained my individual contribution file within the GitHub
+repository and corrected documentation structure and linking issues to ensure that
+evidence of individual work is clearly visible. This supports transparency within the
+group and fair assessment of contributions.
+From a technical perspective, I supported the team by reviewing the Docker-based
+development environment and Node.js setup, confirming that the application could be
+run locally using the shared configuration. This helped reduce the risk of environmentrelated issues and established a consistent workflow for future sprints.
+Evidence of my contribution is available through my commits on GitHub under the
+account “rakibm-roehampton”, particularly within the documentation files in the docs
+folder.
+I also took a leading role in refining the personas to ensure they were realistic, clearly
+defined, and aligned with the project’s community-focused goals.
+Oleksii Ivanov
+During Sprint 1, my main contribution was focused on setting up the technical and
+organisational foundations of the project. I created the GitHub repository and set up the
+GitHub Project board, where I assigned initial tasks to each team member to help
+organise the workflow and clarify responsibilities within the group.
+I was also responsible for setting up and testing the Docker-based development
+environment and supporting the initial Express server configuration. This ensured that
+the application could be run locally using the same configuration across different
+machines and helped avoid environment-related issues at an early stage.
+Alongside this, I supported the overall Sprint 1 delivery by making sure that the required
+project setup and infrastructure were completed in line with the assessment brief. This
+work helped establish a stable starting point for development and collaboration in later
+sprints. Evidence of my contribution can be seen in the GitHub commit history related
+to the repository setup, project board configuration, task assignment, and environment
+setup.
+Shannel Keny Rodrigues
+Contributed to Sprint 1 planning activities, reviewing project requirements, supporting
+documentation preparation, and participating in group discussions and meetings.
+Links
+GitHub Repository:
+https://github.com/OleksiiIvanov1/cmp-n204-community-sharing/tree/main
+GitHub Project Board:
+https://github.com/users/OleksiiIvanov1/projects/2
