@@ -22,7 +22,7 @@ During Sprint 1, the focus has been on setting up the development workflow, conf
 
 ### Frontend
 - JavaScript   
-- HTML
+- Dockerfile
   
 ### Backend
 - Node.js  
