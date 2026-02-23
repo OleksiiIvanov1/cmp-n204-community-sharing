@@ -20,7 +20,7 @@ As part of Sprint 1 planning, I took responsibility for refining the personas to
 ### Persona 2: User Offering Skills or Resources
 
 **Name:** Meason Silveira
- **Age:** 28
+ **Age:** 28  
 **Role:** Senior Student / Working Professional  
 
 | Aspect | Description |
