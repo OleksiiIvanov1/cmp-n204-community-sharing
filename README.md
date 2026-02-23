@@ -121,5 +121,3 @@ docker-compose.yml → Service configuration
 package.json → Project dependencies
 
 README.md → Project documentation
-
-12121
