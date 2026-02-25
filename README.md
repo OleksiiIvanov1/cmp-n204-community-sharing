@@ -121,3 +121,5 @@ docker-compose.yml → Service configuration
 package.json → Project dependencies
 
 README.md → Project documentation
+
+Sprint 2 Documentation: docs/Sprint2_CommunityShare_Group4.pdf
