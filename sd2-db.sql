@@ -1,4 +1,4 @@
-{11111
+{
   "name": "sd2-example",
   "version": "1.0.0",
   "lockfileVersion": 1,
