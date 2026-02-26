@@ -1,75 +1,83 @@
-# Community Share – Student Skill Exchange Platform
+# Community Share – Student Skill Exchange
 
-Community Share is a full-stack web application developed as part of the CMP-N204 Software Engineering module.
-The platform allows university students to offer and request academic or practical skills through a structured community exchange system.
+This project is developed for the CMP-N204 Software Engineering module.
+Community Share is a student-focused platform where users can exchange skills such as programming help, language practice, CV feedback, or interview preparation without any financial transactions.
 
----
-
-## 📌 Project Overview
-
-The aim of this project is to create a cooperative digital environment where students can share knowledge without financial transactions.
-Users can create profiles, publish skill listings, browse available support, and manage exchange requests within a safe and moderated platform.
+The goal of the project is to encourage collaboration between students by creating a simple and structured environment where people can offer and request support from each other.
 
 ---
 
-## 🛠️ Tech Stack
+## Project Idea
+
+Many students need help with academic or practical skills but may not always have access to paid services. At the same time, other students have useful knowledge they are willing to share.
+Community Share connects these users through profiles, skill listings, and request management features.
+
+---
+
+## Technologies Used
+
+Frontend:
+
+* HTML
+* CSS
+* JavaScript
+* PUG templates
+
+Backend:
 
 * Node.js
 * Express.js
 * MySQL
-* PUG Template Engine
-* Docker (Development Environment)
-* GitHub Projects (Agile Workflow)
+
+Tools:
+
+* Docker
+* GitHub Projects (Kanban Board)
 
 ---
 
-## 🚀 Sprint Status
+## Current Progress
 
-✔ Sprint 1 – Project Setup and Initial Planning
-✔ Sprint 2 – System Design, UML Diagrams, and Wireframes
-🔄 Sprint 3 – Implementation (In Progress)
+Sprint 1 focused on setting up the repository, Docker environment, and project structure.
+Sprint 2 focused on system design, including user stories, diagrams, wireframes, and database planning.
+Sprint 3 will focus on building the main application features.
 
 ---
 
-## 📄 Documentation
+## Documentation
 
-Sprint 2 Documentation and Design Artefacts:
-docs/Sprint2_CommunityShare_Group4.pdf
+Design and planning documents are included inside the repository.
+These cover:
 
-This includes:
-
-* Use Case Diagram
+* Use case diagram
 * Wireframes
-* Activity Diagram
-* Database ER Design
-* Design & Colour Scheme
-* Sprint 3 Planning
+* Activity flow
+* Database ER diagram
+* Sprint planning
 
 ---
 
-## 📋 Project Management
+## Project Management
 
-GitHub Project Board (Kanban Workflow):
+Kanban Board:
 https://github.com/users/OleksiiIvanov1/projects/2
 
-The board demonstrates backlog refinement, task allocation, and sprint progress tracking following Agile Scrum practices.
+We use the GitHub project board to organise tasks, assign responsibilities, and track sprint progress.
 
 ---
 
-## 👥 Group Members
+## Group Members
 
-* Oleksii Ivanov – A00034498
-* Mehedi Hasan Rakib – A00022820
-* Shannel Keny Rodrigues – A00025655
-* Abbas Mohamad – A00041006
+Oleksii Ivanov – A00034498
+Mehedi Hasan Rakib – A00022820
+Shannel Keny Rodrigues – A00025655
+Abbas Mohamad – A00041006
 
 ---
 
-## ⚙️ Development Setup
+## Running the Project
 
-1. Clone the repository
-2. Ensure Docker Desktop is running
-3. Start the development environment using Docker
-4. Access the application via localhost
+Make sure Docker Desktop is installed and running.
+Clone the repository and start the containers using docker-compose.
 
-(Full setup instructions will be expanded during Sprint 3 implementation.)
+Further setup instructions will be updated during development.
