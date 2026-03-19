@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h2 Skill Listings
+
+  ul
+    each skill in skills
+      li
+        a(href="/skills/" + skill.id) #{skill.title}

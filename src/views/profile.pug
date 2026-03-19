@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h2= user.name
+
+  p Email: #{user.email}
+
+  h3 Skills
+  ul
+    each skill in skills
+      li #{skill.title}

@@ -4,15 +4,15 @@
     "description": "Community sharing platform - Sprint 1 setup",
     "main": "index.js",
     "scripts": {
-      "start": "supervisor index.js"
+        "start": "supervisor index.js"
     },
     "author": "Community Share Group",
     "license": "ISC",
     "dependencies": {
-      "dotenv": "^10.0.0",
-      "express": "^4.17.1",
-      "mysql2": "^2.3.0",
-      "supervisor": "^0.12.0"
+        "dotenv": "^10.0.0",
+        "express": "^4.17.1",
+        "mysql2": "^2.3.0",
+        "pug": "^3.0.4",
+        "supervisor": "^0.12.0"
     }
-  }
-  
+}
