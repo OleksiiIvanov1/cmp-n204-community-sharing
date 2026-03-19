@@ -1,13 +1,20 @@
-FROM node:18
+# Base image to use
+FROM node:latest
 
-WORKDIR /app
+# set a working directory
+WORKDIR /src
 
-COPY package*.json ./
+# Copy across project configuration information
+# Install application dependencies
+COPY package*.json /src/
 
-RUN npm install
+# Ask npm to install the dependencies
+RUN npm install -g supervisor && npm install && npm install supervisor
 
-COPY . .
+# Copy across all our files
+COPY . /src
 
+# Expose our application port (3000)
 EXPOSE 3000
 
-CMD ["node", "index.js"]
+

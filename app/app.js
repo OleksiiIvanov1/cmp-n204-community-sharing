@@ -1,31 +1,32 @@
-"use strict";
+require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
 
 const app = express();
 
-// PUG setup
+// static
+app.use(express.static("static"));
+
+// view engine (if required)
 app.set("view engine", "pug");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "../views"));
 
+// DB
+const db = require("../services/db");
 
-
-// Home
+// routes
 app.get("/", (req, res) => {
     res.send("Home working");
 });
 
-// Test
-app.get("/test", (req, res) => {
-    res.render("layout");
+// DB test (KEEP THIS — teacher expects it)
+app.get("/db_test", async (req, res) => {
+    const results = await db.query("SELECT * FROM test_table");
+    res.send(results);
 });
 
-
-// SKILLS
-
-
-// Skills list
+// skills
 app.get("/skills", (req, res) => {
     const skills = [
         { id: 1, title: "JavaScript" },
@@ -35,22 +36,18 @@ app.get("/skills", (req, res) => {
     res.render("listings", { skills });
 });
 
-// Skill detail
+// single skill
 app.get("/skills/:id", (req, res) => {
     const skill = {
         id: req.params.id,
         title: "JavaScript",
-        description: "Learn JS basics"
+        description: "Example skill"
     };
 
     res.render("detail", { skill });
 });
 
-
-
-// USERS
-
-// Users list
+// users
 app.get("/users", (req, res) => {
     const users = [
         { id: 1, name: "Alex" },
@@ -60,7 +57,7 @@ app.get("/users", (req, res) => {
     res.render("users", { users });
 });
 
-// User profile
+// user profile
 app.get("/users/:id", (req, res) => {
     const user = {
         id: req.params.id,
@@ -76,7 +73,9 @@ app.get("/users/:id", (req, res) => {
     res.render("profile", { user, skills });
 });
 
+// IMPORTANT: start server HERE (not index.js)
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
+});
 
-
-// EXPORT
 module.exports = app;
