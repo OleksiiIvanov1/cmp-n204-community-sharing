@@ -1,18 +1,17 @@
 {
-    "name": "community-share",
-    "version": "1.0.0",
-    "description": "Community sharing platform - Sprint 1 setup",
-    "main": "index.js",
-    "scripts": {
-        "start": "supervisor index.js"
-    },
-    "author": "Community Share Group",
-    "license": "ISC",
-    "dependencies": {
-        "dotenv": "^10.0.0",
-        "express": "^4.17.1",
-        "mysql2": "^2.3.0",
-        "pug": "^3.0.4",
-        "supervisor": "^0.12.0"
-    }
+  "name": "community-share",
+  "version": "1.0.0",
+  "description": "Community sharing platform",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "node app/index.js"
+  },
+  "author": "Community Share Group",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.18.2",
+    "mysql2": "^2.3.3",
+    "pug": "^3.0.2"
+  }
 }
