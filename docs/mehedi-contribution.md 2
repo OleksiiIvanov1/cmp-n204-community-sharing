@@ -1,4 +1,4 @@
-## Mehedi Hasan Rakib Contribution
+## Mehedi Hasan Rakib Contribution sprint 3
 
 I set up and tested the MySQL database connection using Docker and environment variables.
 
@@ -11,3 +11,8 @@ I implemented working Express routes for:
 - /users/:id (individual user profile page)
 
 I also created Pug views for displaying user data and tested full end-to-end functionality.
+
+
+### Mehedi contribution
+i implemented backend routing for Skills feature including
+database queries and dynamic skill detail pages.
