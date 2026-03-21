@@ -81,3 +81,7 @@ Make sure Docker Desktop is installed and running.
 Clone the repository and start the containers using docker-compose.
 
 Further setup instructions will be updated during development.
+
+### Individual Contributions
+
+- Mehedi Hasan Rakib – MySQL setup, database routes, user pages
