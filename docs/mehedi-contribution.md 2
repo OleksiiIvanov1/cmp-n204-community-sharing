@@ -1,0 +1,13 @@
+## Mehedi Hasan Rakib Contribution
+
+I set up and tested the MySQL database connection using Docker and environment variables.
+
+I created and populated the `users` table in the MySQL database using phpMyAdmin.
+
+I implemented working Express routes for:
+
+- /db_test (database connection test)
+- /users (users listing page)
+- /users/:id (individual user profile page)
+
+I also created Pug views for displaying user data and tested full end-to-end functionality.
