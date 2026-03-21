@@ -75,13 +75,22 @@ Abbas Mohamad – A00041006
 
 ---
 
+
 ## Running the Project
 
 Make sure Docker Desktop is installed and running.
 Clone the repository and start the containers using docker-compose.
 
-Further setup instructions will be updated during development.
+
+
+
 
 ### Individual Contributions
-
-- Mehedi Hasan Rakib – MySQL setup, database routes, user pages
+### Mehedi Hasan Rakib
+-  MySQL setup, database routes, user pages
+- 
+- ### Skills Feature (Sprint 3 - Mehedi)
+- Connected Skills routes to MySQL database
+- Implemented `/skills` route to display all skills
+- Implemented `/skills/:id` route for skill detail page
+- Tested database queries successfully using Express
