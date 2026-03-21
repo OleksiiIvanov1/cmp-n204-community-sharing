@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title Create Skill
+  body
+    h1 Create Skill
+
+    form(action="/skills/create" method="POST")
+      input(type="text" name="title" placeholder="Title")
+      br
+      textarea(name="description" placeholder="Description")
+      br
+      input(type="text" name="category" placeholder="Category")
+      br
+      button(type="submit") Create
