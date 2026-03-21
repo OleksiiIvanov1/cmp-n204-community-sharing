@@ -1,6 +1,7 @@
 extends layout
 
 block content
+<<<<<<< HEAD
   h1 Skills List
 
   if skills && skills.length
@@ -10,3 +11,11 @@ block content
           a(href=`/skills/${skill.id}`) #{skill.title}
   else
     p No skills found
+=======
+  h2 Skill Listings
+
+  ul
+    each skill in skills
+      li
+        a(href="/skills/" + skill.id) #{skill.title}
+>>>>>>> 7f3833a31934e5e88b8d237aef3d2a9e266a92d3

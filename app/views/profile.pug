@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 doctype html
 html
   head
@@ -9,3 +10,16 @@ html
     p Email: #{user.email}
     p
       a(href="/users") Back to users
+=======
+extends layout
+
+block content
+  h2= user.name
+
+  p Email: #{user.email}
+
+  h3 Skills
+  ul
+    each skill in skills
+      li #{skill.title}
+>>>>>>> 7f3833a31934e5e88b8d237aef3d2a9e266a92d3
