@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Skills List
+
+  if skills && skills.length
+    ul
+      each skill in skills
+        li
+          a(href=`/skills/${skill.id}`) #{skill.title}
+  else
+    p No skills found

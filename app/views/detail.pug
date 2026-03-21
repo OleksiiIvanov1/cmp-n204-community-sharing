@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 Skill Detail
+
+  if skill
+    p ID: #{skill.id}
+    p Title: #{skill.title}
+    p Description: #{skill.description}
+  else
+    p Skill not found
+
+  p
+    a(href="/skills") Back to skills
