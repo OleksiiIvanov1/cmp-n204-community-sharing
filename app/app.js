@@ -205,3 +205,32 @@ app.listen(3000, () => {
 });
 
 module.exports = app;
+// =============== CATEGORIES LIST =================
+app.get("/categories", async (req, res) => {
+  try {
+    const categories = await db.query("SELECT * FROM categories");
+
+    let html = `
+      <html>
+      <head><title>Categories</title></head>
+      <body>
+        <h1>Categories List</h1>
+        <ul>
+    `;
+
+    categories.forEach((category) => {
+      html += `<li>${category.name}</li>`;
+    });
+
+    html += `
+        </ul>
+      </body>
+      </html>
+    `;
+
+    res.send(html);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database query failed");
+  }
+});
