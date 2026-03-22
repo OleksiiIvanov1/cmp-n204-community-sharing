@@ -1,9 +1,10 @@
 services:
   web:
-    build: .
+    build:
+      context: ./
     volumes:
-      - .:/app
-    command: npm start
+      - .:/src
+    command: supervisor -e 'js,pug,html' index.js
     ports:
       - "3000:3000"
     depends_on:

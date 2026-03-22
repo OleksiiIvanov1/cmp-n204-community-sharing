@@ -1,12 +1,11 @@
 FROM node:18
 
-WORKDIR /app
+WORKDIR /src
 
-COPY package*.json ./
-RUN npm install
+COPY package*.json /src/
 
-COPY . .
+RUN npm install -g supervisor && npm install && npm install supervisor
+
+COPY . /src
 
 EXPOSE 3000
-
-CMD ["node", "src/index.js"]
