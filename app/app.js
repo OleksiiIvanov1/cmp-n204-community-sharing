@@ -1,84 +1,78 @@
-"use strict";
+require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
 
 const app = express();
 
-// PUG setup
+app.use(express.static("static"));
+
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
+const db = require("../services/db");
 
-
-// Home
-app.get("/", (req, res) => {
-    res.send("Home working");
+app.get("/", function(req, res) {
+    res.send("Hello world!");
 });
 
-// Test
-app.get("/test", (req, res) => {
-    res.render("layout");
+app.get("/db_test", function(req, res) {
+    const sql = 'select * from test_table';
+    db.query(sql).then(results => {
+        console.log(results);
+        res.send(results);
+    });
 });
 
+app.get("/goodbye", function(req, res) {
+    res.send("Goodbye world!");
+});
 
-// SKILLS
+app.get("/hello/:name", function(req, res) {
+    console.log(req.params);
+    res.send("Hello " + req.params.name);
+});
 
-
-// Skills list
 app.get("/skills", (req, res) => {
     const skills = [
         { id: 1, title: "JavaScript" },
         { id: 2, title: "English" }
     ];
-
     res.render("listings", { skills });
 });
 
-// Skill detail
 app.get("/skills/:id", (req, res) => {
     const skill = {
         id: req.params.id,
         title: "JavaScript",
-        description: "Learn JS basics"
+        description: "Example skill"
     };
-
     res.render("detail", { skill });
 });
 
-
-
-// USERS
-
-// Users list
 app.get("/users", (req, res) => {
     const users = [
         { id: 1, name: "Alex" },
         { id: 2, name: "John" }
     ];
-
     res.render("users", { users });
 });
 
-// User profile
 app.get("/users/:id", (req, res) => {
     const user = {
         id: req.params.id,
         name: "Alex",
         email: "alex@email.com"
     };
-
     const skills = [
         { title: "JavaScript" },
         { title: "English" }
     ];
-
     res.render("profile", { user, skills });
 });
 
-
-
-// Start server on port 3000
-app.listen(3000,function(){
+app.listen(3000, function() {
     console.log(`Server running at http://127.0.0.1:3000/`);
 });
+
+module.exports = app;
