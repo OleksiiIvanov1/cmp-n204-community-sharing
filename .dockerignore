@@ -1,17 +1,8 @@
 node_modules
-src/node_modules
 .git
 .gitignore
 .env
-
-# THIS IS YOUR BUG
 *.sock
 db/mysql.sock
 db/*.sock
-
-# clean build
-Dockerfile
-docker-compose.yml
-
-# optional junk
 *.log

@@ -10,7 +10,7 @@ app.use(express.static("static"));
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
-const db = require("../../services/db");
+const db = require("../services/db");
 
 app.get("/", function(req, res) {
     res.send("Hello world!");
