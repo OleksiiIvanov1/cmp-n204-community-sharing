@@ -3,7 +3,7 @@
 This project is developed for the CMP-N204 Software Engineering module.
 Community Share is a student-focused platform where users can exchange skills such as programming help, language practice, CV feedback, or interview preparation without any financial transactions.
 
-The goal of the project is to encourage collaboration between students by creating a simple and structured environment where people can offer and request support from each other.
+The goal of the project is to encourage collaboration between students by creating a simple and structured environment where people can offer and request support from each other. 
 
 ---
 
