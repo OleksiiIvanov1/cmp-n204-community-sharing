@@ -3,235 +3,260 @@ console.log("DB USER:", process.env.DB_USER);
 
 const express = require("express");
 const app = express();
-
 const db = require("../services/db");
 
-// allow form data
 app.use(express.urlencoded({ extended: true }));
 
+// ================= HELPERS =================
+async function getPK(table) {
+  const cols = await db.query(`SHOW COLUMNS FROM ${table}`);
+  return cols.find(c => c.Key === "PRI")?.Field || cols[0].Field;
+}
+
+async function getCols(table) {
+  const cols = await db.query(`SHOW COLUMNS FROM ${table}`);
+  return cols.map(c => c.Field);
+}
+
+function pick(obj, keys, def="") {
+  for (let k of keys) if (obj[k] !== undefined) return obj[k];
+  return def;
+}
+
+// ================= LAYOUT =================
+function layout(title, body) {
+  return `
+  <html>
+  <head>
+    <title>${title}</title>
+    <style>
+      body { font-family: Arial; background:#F3F4F6; margin:0; }
+      .nav { background:#2563EB; padding:15px 30px; display:flex; gap:20px; }
+      .nav a { color:white; text-decoration:none; }
+      .container { max-width:1100px; margin:auto; padding:30px; }
+
+      .hero {
+        background: linear-gradient(135deg,#2563EB,#60A5FA);
+        color:white;
+        padding:50px;
+        border-radius:18px;
+        margin-bottom:30px;
+      }
+
+      .btn {
+        padding:10px 15px;
+        border-radius:8px;
+        text-decoration:none;
+        margin-right:10px;
+      }
+
+      .btn-primary { background:#22C55E; color:white; }
+      .btn-secondary { background:white; color:#2563EB; }
+
+      .grid {
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+        gap:20px;
+      }
+
+      .card {
+        background:white;
+        padding:20px;
+        border-radius:12px;
+        margin-bottom:15px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="nav">
+      <a href="/">Home</a>
+      <a href="/users">Members</a>
+      <a href="/skills">Skills</a>
+      <a href="/requests">Requests</a>
+      <a href="/categories">Categories</a>
+    </div>
+
+    <div class="container">
+      ${body}
+    </div>
+
+  </body>
+  </html>
+  `;
+}
+
 // ================= HOME =================
-app.get("/", (req, res) => {
-  res.send("Home working");
+app.get("/", (req,res)=>{
+  res.send(layout("Home",`
+
+    <div class="hero">
+      <h1>Learn Together. Share Together.</h1>
+      <p>
+        Community Share is a student skill exchange platform where users can
+        offer skills, ask for help, and build useful connections in a simple
+        and supportive space.
+      </p>
+
+      <a class="btn btn-primary" href="/skills">Browse Skills</a>
+      <a class="btn btn-secondary" href="/users">View Members</a>
+    </div>
+
+    <h2>What you can do</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Explore Skills</h3>
+        <p>Browse useful skills shared by students.</p>
+      </div>
+
+      <div class="card">
+        <h3>Connect with Members</h3>
+        <p>View profiles and find people who can help.</p>
+      </div>
+
+      <div class="card">
+        <h3>Send Requests</h3>
+        <p>Request help directly from skill pages.</p>
+      </div>
+    </div>
+
+    <h2>Our Team</h2>
+
+    <div class="grid">
+      <div class="card"><h3>Mehedi</h3><p>Database + backend support.</p></div>
+      <div class="card"><h3>Abbas</h3><p>Documentation + planning.</p></div>
+      <div class="card"><h3>Shannel</h3><p>Testing + UI improvements.</p></div>
+      <div class="card"><h3>Oleksii</h3><p>Research + system ideas.</p></div>
+    </div>
+
+  `));
 });
 
+// ================= USERS =================
+app.get("/users", async (req,res)=>{
+  const users = await db.query("SELECT * FROM users");
+  const pk = await getPK("users");
 
-// ================= DB TEST =================
-app.get("/db_test", async (req, res) => {
-  try {
-    const results = await db.query("SELECT * FROM users");
-    res.json(results);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Database query failed");
-  }
-});
+  let html="<h1>Members</h1>";
 
-
-// ================= USERS LIST =================
-app.get("/users", async (req, res) => {
-  try {
-    const users = await db.query("SELECT * FROM users");
-
-    let html = `
-      <html>
-      <head><title>Users</title></head>
-      <body>
-        <h1>Users List</h1>
-        <ul>
+  users.forEach(u=>{
+    html+=`
+      <div class="card">
+        <h3>${pick(u,["name"])}</h3>
+        <p>${pick(u,["email"])}</p>
+        <a class="btn btn-primary" href="/users/${u[pk]}">View</a>
+      </div>
     `;
+  });
 
-    users.forEach((user) => {
-      html += `<li><a href="/users/${user.id}">${user.name} - ${user.email}</a></li>`;
-    });
+  res.send(layout("Users",html));
+});
 
-    html += `
-        </ul>
-      </body>
-      </html>
+// ================= SKILLS =================
+app.get("/skills", async (req,res)=>{
+  const skills = await db.query("SELECT * FROM skills");
+  const pk = await getPK("skills");
+
+  let html="<h1>Skills</h1><a class='btn btn-primary' href='/skills/create'>Create</a>";
+
+  skills.forEach(s=>{
+    html+=`
+      <div class="card">
+        <h3>${pick(s,["title"])}</h3>
+        <p>${pick(s,["description"])}</p>
+        <a class="btn btn-primary" href="/skills/${s[pk]}">View</a>
+      </div>
     `;
+  });
 
-    res.send(html);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Failed to load users");
-  }
+  res.send(layout("Skills",html));
 });
 
+app.get("/skills/create",(req,res)=>{
+  res.send(layout("Create",`
+    <h1>Create Skill</h1>
+    <form method="POST">
+      <input name="title" placeholder="Title"/><br><br>
+      <textarea name="description"></textarea><br>
+      <button>Create</button>
+    </form>
+  `));
+});
 
-// ================= USER PROFILE =================
-app.get("/users/:id", async (req, res) => {
-  try {
-    const rows = await db.query(
-      "SELECT * FROM users WHERE id = ?",
-      [req.params.id]
-    );
+app.post("/skills/create", async (req,res)=>{
+  await db.query(
+    "INSERT INTO skills (title, description) VALUES (?,?)",
+    [req.body.title, req.body.description]
+  );
+  res.redirect("/skills");
+});
 
-    if (rows.length === 0) return res.send("User not found");
+// ================= SKILL DETAIL =================
+app.get("/skills/:id", async (req,res)=>{
+  const skill = await db.query("SELECT * FROM skills WHERE id=?", [req.params.id]);
 
-    const user = rows[0];
+  res.send(layout("Skill",`
+    <div class="card">
+      <h2>${skill[0].title}</h2>
+      <p>${skill[0].description}</p>
+      <a class="btn btn-primary" href="/skills/${req.params.id}/request">Request</a>
+    </div>
+  `));
+});
 
-    let html = `
-      <html>
-      <body>
-        <h1>User Profile</h1>
-        <p>ID: ${user.id}</p>
-        <p>Name: ${user.name}</p>
-        <p>Email: ${user.email}</p>
-        <a href="/users">Back</a>
-      </body>
-      </html>
+// ================= REQUEST =================
+app.get("/skills/:id/request",(req,res)=>{
+  res.send(layout("Request",`
+    <h1>Request Skill</h1>
+    <form method="POST">
+      <textarea name="message"></textarea><br>
+      <button>Send</button>
+    </form>
+  `));
+});
+
+app.post("/skills/:id/request", async (req,res)=>{
+  await db.query(
+    "INSERT INTO requests (skill_id, message, status) VALUES (?,?,?)",
+    [req.params.id, req.body.message, "Pending"]
+  );
+
+  res.redirect("/requests");
+});
+
+// ================= REQUESTS =================
+app.get("/requests", async (req,res)=>{
+  const r = await db.query("SELECT * FROM requests");
+
+  let html="<h1>Requests</h1>";
+
+  r.forEach(x=>{
+    html+=`
+      <div class="card">
+        <p>${x.message}</p>
+        <p>Status: ${x.status}</p>
+      </div>
     `;
+  });
 
-    res.send(html);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Failed to load profile");
-  }
+  res.send(layout("Requests",html));
 });
 
+// ================= CATEGORIES =================
+app.get("/categories", async (req,res)=>{
+  const c = await db.query("SELECT * FROM categories");
 
-// ================= SKILLS LIST =================
-app.get("/skills", async (req, res) => {
-  try {
-    const skills = await db.query("SELECT * FROM skills");
+  let html="<h1>Categories</h1>";
 
-    let html = `
-      <html>
-      <body>
-        <h1>Skills List</h1>
-        <a href="/skills/create">Create New Skill</a>
-        <ul>
-    `;
+  c.forEach(x=>{
+    html+=`<div class="card">${x.name}</div>`;
+  });
 
-    skills.forEach((skill) => {
-      html += `<li>
-        <a href="/skills/${skill.id}">
-          ${skill.title} - ${skill.category}
-        </a>
-      </li>`;
-    });
-
-    html += `
-        </ul>
-      </body>
-      </html>
-    `;
-
-    res.send(html);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Failed to load skills");
-  }
+  res.send(layout("Categories",html));
 });
-
-
-// ================= ⭐ CREATE SKILL FORM =================
-app.get("/skills/create", (req, res) => {
-  res.send(`
-    <html>
-    <body>
-      <h1>Create Skill</h1>
-
-      <form method="POST" action="/skills/create">
-        <input name="title" placeholder="Title" required/><br/><br/>
-        <input name="category" placeholder="Category" required/><br/><br/>
-        <textarea name="description" placeholder="Description"></textarea><br/><br/>
-
-        <button type="submit">Create</button>
-      </form>
-
-      <br/>
-      <a href="/skills">Back</a>
-    </body>
-    </html>
-  `);
-});
-
-
-// ================= ⭐ HANDLE CREATE SKILL =================
-app.post("/skills/create", async (req, res) => {
-  try {
-    const { title, category, description } = req.body;
-
-    await db.query(
-      "INSERT INTO skills (title, category, description) VALUES (?, ?, ?)",
-      [title, category, description]
-    );
-
-    res.redirect("/skills");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Failed to create skill");
-  }
-});
-
-
-// ================= SINGLE SKILL =================
-app.get("/skills/:id", async (req, res) => {
-  try {
-    const rows = await db.query(
-      "SELECT * FROM skills WHERE id = ?",
-      [req.params.id]
-    );
-
-    if (rows.length === 0) return res.send("Skill not found");
-
-    const skill = rows[0];
-
-    let html = `
-      <html>
-      <body>
-        <h1>Skill Detail</h1>
-        <p>ID: ${skill.id}</p>
-        <p>Title: ${skill.title}</p>
-        <p>Category: ${skill.category}</p>
-        <p>Description: ${skill.description}</p>
-
-        <a href="/skills">Back</a>
-      </body>
-      </html>
-    `;
-
-    res.send(html);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Failed to load skill");
-  }
-});
-
 
 // ================= SERVER =================
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
-});
-
-module.exports = app;
-// =============== CATEGORIES LIST =================
-app.get("/categories", async (req, res) => {
-  try {
-    const categories = await db.query("SELECT * FROM categories");
-
-    let html = `
-      <html>
-      <head><title>Categories</title></head>
-      <body>
-        <h1>Categories List</h1>
-        <ul>
-    `;
-
-    categories.forEach((category) => {
-      html += `<li>${category.name}</li>`;
-    });
-
-    html += `
-        </ul>
-      </body>
-      </html>
-    `;
-
-    res.send(html);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Database query failed");
-  }
+app.listen(3000,()=>{
+  console.log("Server running on http://localhost:3000");
 });
