@@ -78,6 +78,6 @@ Abbas Mohamad – A00041006
 ## Running the Project
 
 Make sure Docker Desktop is installed and running.
-Clone the repository and start the containers using docker-compose.
+Clone the repository and start the containers using docker-compose. 
 
 Further setup instructions will be updated during development.
