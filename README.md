@@ -23,7 +23,7 @@ Frontend:
 * JavaScript
 * PUG templates
 
-Backend:
+Backend: 
 
 * Node.js
 * Express.js
