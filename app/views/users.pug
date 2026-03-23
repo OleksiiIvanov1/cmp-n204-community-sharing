@@ -1,9 +1,17 @@
 extends layout
 
 block content
-  h2 Users
-
-  ul
+  .page-header
+    h1 Community Members
+    p Connect with people who want to share and learn together
+  
+  .grid-2
     each user in users
-      li
-        a(href="/users/" + user.id) #{user.name}
+      a.card.user-card(href="/users/" + user.id)
+        .avatar.avatar= user.name ? user.name[0] : "U"
+        .user-card-info
+          h3= user.name
+          p= user.bio || "Community member"
+        .user-card-meta
+          span #{user.skillCount || "2"} skills
+
