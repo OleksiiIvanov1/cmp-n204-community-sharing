@@ -1,4 +1,4 @@
-# Community Share – Student Skill Exchange
+# Community Share – Student Skill Exchange 
 
 This project is developed for the CMP-N204 Software Engineering module.
 Community Share is a student-focused platform where users can exchange skills such as programming help, language practice, CV feedback, or interview preparation without any financial transactions.
