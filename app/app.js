@@ -4,6 +4,8 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use(express.static("static"));
 
@@ -12,73 +14,178 @@ app.set("views", path.join(__dirname, "views"));
 
 const db = require("../services/db");
 
-app.get("/", function(req, res) {
+
+// ======================
+// HOME
+// ======================
+app.get("/", (req, res) => {
     res.redirect("/skills");
 });
 
-app.get("/db_test", function(req, res) {
-    const sql = 'select * from test_table';
-    db.query(sql).then(results => {
-        res.send(results);
-    });
+
+// ======================
+// DB TEST
+// ======================
+app.get("/db_test", async (req, res) => {
+    try {
+        const results = await db.query("SELECT * FROM Students");
+        res.json(results);
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
-app.get("/skills", (req, res) => {
-    const skills = [
-        { id: 1, title: "Spanish Conversation", description: "Native speaker offering weekly sessions. Beginners welcome.", category: "Language", level: "Beginner friendly", teacher: "Maria G." },
-        { id: 2, title: "Python for Beginners", description: "Learn Python from scratch. No coding experience needed.", category: "Technology", level: "All levels", teacher: "James T." },
-        { id: 3, title: "French for Travellers", description: "Practical French for restaurants, transport and sightseeing.", category: "Language", level: "Intermediate", teacher: "Sophie L." },
-        { id: 4, title: "Guitar — Jazz Basics", description: "Jazz chord voicings and swing rhythm on acoustic or electric.", category: "Music", level: "Intermediate", teacher: "Alex R." },
-        { id: 5, title: "Mandarin Chinese", description: "HSK 1-3 prep and daily conversation with a native Beijing speaker.", category: "Language", level: "Beginner friendly", teacher: "Li W." },
-        { id: 6, title: "Watercolour Painting", description: "Explore watercolour from washes to fine detail work.", category: "Art & Design", level: "All levels", teacher: "Priya K." }
-    ];
-    res.render("listings", { skills });
+
+// ======================
+// SKILLS (MODULES)
+// ======================
+app.get("/skills", async (req, res) => {
+    try {
+        const modules = await db.query("SELECT * FROM Modules");
+
+        // map DB → PUG EXPECTED FORMAT
+        const skills = modules.map(m => ({
+            id: m.module_id,
+            title: m.module_name,
+            description: "Module available for study",
+            category: "Module",
+            level: "All levels",
+            teacher: "Staff"
+        }));
+
+        res.render("listings", { skills });
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
-app.get("/skills/:id", (req, res) => {
-    const skill = {
-        id: req.params.id,
-        title: "Spanish Conversation Practice",
-        description: "Native speaker offering weekly conversation sessions focused on everyday vocabulary and natural speaking flow. Sessions are relaxed and informal — great for building confidence.",
-        category: "Language",
-        level: "Beginner friendly",
-        teacher: "Maria G.",
-        location: "Online or London",
-        availability: "Weekends preferred",
-        wantedSkill: "English conversation",
-        wantedSkill2: "Music lessons"
-    };
-    res.render("detail", { skill });
+
+// ======================
+// SINGLE SKILL (MODULE)
+// ======================
+app.get("/skills/:id", async (req, res) => {
+    try {
+        const module = await db.query(
+            "SELECT * FROM Modules WHERE module_id = ?",
+            [req.params.id]
+        );
+
+        if (!module.length) {
+            return res.status(404).send("Module not found");
+        }
+
+        const skill = {
+            id: module[0].module_id,
+            title: module[0].module_name,
+            description: "This module is part of the course offering.",
+            category: "Module",
+            level: "All levels",
+            teacher: "Staff",
+            location: "University",
+            availability: "Semester-based",
+            wantedSkill: "Collaboration",
+            wantedSkill2: "Teamwork"
+        };
+
+        res.render("detail", { skill });
+
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
-app.get("/users", (req, res) => {
-    const users = [
-        { id: 1, name: "Maria Garcia", bio: "Spanish tutor · London", skillCount: 3 },
-        { id: 2, name: "James Thompson", bio: "Software developer · Manchester", skillCount: 2 },
-        { id: 3, name: "Sophie Laurent", bio: "French teacher · Edinburgh", skillCount: 4 },
-        { id: 4, name: "Li Wei", bio: "Mandarin tutor · Birmingham", skillCount: 2 },
-        { id: 5, name: "Alex Rivera", bio: "Musician · Bristol", skillCount: 3 },
-        { id: 6, name: "Priya Kapoor", bio: "Artist · Leeds", skillCount: 2 }
-    ];
-    res.render("users", { users });
+
+// ======================
+// USERS (STUDENTS)
+// ======================
+app.get("/users", async (req, res) => {
+    try {
+        const students = await db.query("SELECT * FROM Students");
+
+        // map to PUG format
+        const users = students.map(s => ({
+            id: s.student_id,
+            name: s.name,
+            bio: "Student",
+            skillCount: 0 // optional
+        }));
+
+        res.render("users", { users });
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
-app.get("/users/:id", (req, res) => {
-    const user = {
-        id: req.params.id,
-        name: "Maria Garcia",
-        email: "maria.garcia@email.com"
-    };
-    const skills = [
-        { id: 1, title: "Spanish Conversation", description: "Native speaker, beginner friendly weekly sessions", category: "Language", level: "Beginner" },
-        { id: 2, title: "Spanish Writing", description: "Grammar, composition and essay feedback", category: "Language", level: "Intermediate" },
-        { id: 3, title: "Salsa Dancing", description: "Cuban-style salsa basics for absolute beginners", category: "Dance", level: "Beginner" }
-    ];
-    res.render("profile", { user, skills });
+
+// ======================
+// SINGLE USER + MODULES
+// ======================
+app.get("/users/:id", async (req, res) => {
+    try {
+        const studentId = req.params.id;
+
+        const student = await db.query(
+            "SELECT * FROM Students WHERE student_id = ?",
+            [studentId]
+        );
+
+        if (!student.length) {
+            return res.status(404).send("Student not found");
+        }
+
+        const modules = await db.query(`
+            SELECT 
+                Modules.module_id AS id,
+                Modules.module_name AS title,
+                'Module description' AS description,
+                'Module' AS category,
+                'All levels' AS level
+            FROM Enrollments
+            JOIN Modules ON Enrollments.module_id = Modules.module_id
+            WHERE Enrollments.student_id = ?
+        `, [studentId]);
+
+        const user = {
+            id: student[0].student_id,
+            name: student[0].name,
+            email: student[0].email
+        };
+
+        res.render("profile", {
+            user,
+            skills: modules
+        });
+
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
-app.listen(3000, function() {
-    console.log(`Server running at http://127.0.0.1:3000/`);
+
+// ======================
+// CREATE STUDENT
+// ======================
+app.post("/students", async (req, res) => {
+    try {
+        const { name, email } = req.body;
+
+        await db.query(
+            "INSERT INTO Students (name, email) VALUES (?, ?)",
+            [name, email]
+        );
+
+        res.redirect("/users");
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+
+// ======================
+// SERVER
+// ======================
+app.listen(3000, () => {
+    console.log("Server running at http://127.0.0.1:3000/");
 });
 
 module.exports = app;
