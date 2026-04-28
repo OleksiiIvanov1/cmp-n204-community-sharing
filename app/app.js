@@ -24,11 +24,11 @@ app.get("/", (req, res) => {
 
 
 // ======================
-// DB TEST
+// DB TEST — proves the database connection works
 // ======================
 app.get("/db_test", async (req, res) => {
     try {
-        const results = await db.query("SELECT * FROM Students");
+        const results = await db.query("SELECT * FROM users");
         res.json(results);
     } catch (err) {
         res.status(500).send(err);
@@ -37,20 +37,32 @@ app.get("/db_test", async (req, res) => {
 
 
 // ======================
-// SKILLS (MODULES)
+// LIST ALL SKILLS
+// Joins skills with users (to get the offerer's name)
+// and categories (to get the category name).
 // ======================
 app.get("/skills", async (req, res) => {
     try {
-        const modules = await db.query("SELECT * FROM Modules");
+        const rows = await db.query(`
+            SELECT
+                skills.id,
+                skills.title,
+                skills.description,
+                users.name AS teacher,
+                categories.name AS category
+            FROM skills
+            JOIN users ON skills.user_id = users.id
+            JOIN categories ON skills.category_id = categories.id
+        `);
 
-        // map DB → PUG EXPECTED FORMAT
-        const skills = modules.map(m => ({
-            id: m.module_id,
-            title: m.module_name,
-            description: "Module available for study",
-            category: "Module",
-            level: "All levels",
-            teacher: "Staff"
+        // Add a default level so the Pug template renders cleanly.
+        const skills = rows.map(s => ({
+            id: s.id,
+            title: s.title,
+            description: s.description,
+            teacher: s.teacher,
+            category: s.category,
+            level: "All levels"
         }));
 
         res.render("listings", { skills });
@@ -61,34 +73,37 @@ app.get("/skills", async (req, res) => {
 
 
 // ======================
-// SINGLE SKILL (MODULE)
+// VIEW ONE SKILL IN DETAIL
 // ======================
 app.get("/skills/:id", async (req, res) => {
     try {
-        const module = await db.query(
-            "SELECT * FROM Modules WHERE module_id = ?",
-            [req.params.id]
-        );
+        const rows = await db.query(`
+            SELECT
+                skills.id,
+                skills.title,
+                skills.description,
+                users.name AS teacher,
+                categories.name AS category
+            FROM skills
+            JOIN users ON skills.user_id = users.id
+            JOIN categories ON skills.category_id = categories.id
+            WHERE skills.id = ?
+        `, [req.params.id]);
 
-        if (!module.length) {
-            return res.status(404).send("Module not found");
+        if (!rows.length) {
+            return res.status(404).send("Skill not found");
         }
 
         const skill = {
-            id: module[0].module_id,
-            title: module[0].module_name,
-            description: "This module is part of the course offering.",
-            category: "Module",
+            id: rows[0].id,
+            title: rows[0].title,
+            description: rows[0].description,
+            category: rows[0].category,
             level: "All levels",
-            teacher: "Staff",
-            location: "University",
-            availability: "Semester-based",
-            wantedSkill: "Collaboration",
-            wantedSkill2: "Teamwork"
+            teacher: rows[0].teacher
         };
 
         res.render("detail", { skill });
-
     } catch (err) {
         res.status(500).send(err);
     }
@@ -96,18 +111,17 @@ app.get("/skills/:id", async (req, res) => {
 
 
 // ======================
-// USERS (STUDENTS)
+// LIST ALL USERS
 // ======================
 app.get("/users", async (req, res) => {
     try {
-        const students = await db.query("SELECT * FROM Students");
+        const rows = await db.query("SELECT id, name, email FROM users");
 
-        // map to PUG format
-        const users = students.map(s => ({
-            id: s.student_id,
-            name: s.name,
-            bio: "Student",
-            skillCount: 0 // optional
+        const users = rows.map(u => ({
+            id: u.id,
+            name: u.name,
+            bio: u.email,
+            skillCount: 0
         }));
 
         res.render("users", { users });
@@ -118,63 +132,47 @@ app.get("/users", async (req, res) => {
 
 
 // ======================
-// SINGLE USER + MODULES
+// VIEW ONE USER PROFILE + the skills they offer
 // ======================
 app.get("/users/:id", async (req, res) => {
     try {
-        const studentId = req.params.id;
+        const userId = req.params.id;
 
-        const student = await db.query(
-            "SELECT * FROM Students WHERE student_id = ?",
-            [studentId]
+        const userRows = await db.query(
+            "SELECT id, name, email FROM users WHERE id = ?",
+            [userId]
         );
 
-        if (!student.length) {
-            return res.status(404).send("Student not found");
+        if (!userRows.length) {
+            return res.status(404).send("User not found");
         }
 
-        const modules = await db.query(`
-            SELECT 
-                Modules.module_id AS id,
-                Modules.module_name AS title,
-                'Module description' AS description,
-                'Module' AS category,
-                'All levels' AS level
-            FROM Enrollments
-            JOIN Modules ON Enrollments.module_id = Modules.module_id
-            WHERE Enrollments.student_id = ?
-        `, [studentId]);
+        const skillRows = await db.query(`
+            SELECT
+                skills.id,
+                skills.title,
+                skills.description,
+                categories.name AS category
+            FROM skills
+            JOIN categories ON skills.category_id = categories.id
+            WHERE skills.user_id = ?
+        `, [userId]);
 
         const user = {
-            id: student[0].student_id,
-            name: student[0].name,
-            email: student[0].email
+            id: userRows[0].id,
+            name: userRows[0].name,
+            email: userRows[0].email
         };
 
-        res.render("profile", {
-            user,
-            skills: modules
-        });
+        const skills = skillRows.map(s => ({
+            id: s.id,
+            title: s.title,
+            description: s.description,
+            category: s.category,
+            level: "All levels"
+        }));
 
-    } catch (err) {
-        res.status(500).send(err);
-    }
-});
-
-
-// ======================
-// CREATE STUDENT
-// ======================
-app.post("/students", async (req, res) => {
-    try {
-        const { name, email } = req.body;
-
-        await db.query(
-            "INSERT INTO Students (name, email) VALUES (?, ?)",
-            [name, email]
-        );
-
-        res.redirect("/users");
+        res.render("profile", { user, skills });
     } catch (err) {
         res.status(500).send(err);
     }
