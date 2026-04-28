@@ -40,7 +40,9 @@ Tools:
 
 Sprint 1 focused on setting up the repository, Docker environment, and project structure.
 Sprint 2 focused on system design, including user stories, diagrams, wireframes, and database planning.
-Sprint 3 will focus on building the main application features.
+Sprint 3 delivered the first dynamic database-driven features: skills listing, skill detail page, create skill, users list and user profile, plus a database test endpoint.
+Sprint 4 is currently in progress, focusing on extending functionality with profile editing, request management, and email notifications.
+The application runs in Docker containers using Node.js, Express, MySQL, and Pug.
 
 ---
 
