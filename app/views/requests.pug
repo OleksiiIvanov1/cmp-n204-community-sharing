@@ -1,0 +1,52 @@
+extends layout
+
+block content
+  .page-header
+    h1 My Requests
+    p Manage skill exchange requests.
+
+  if updated
+    .card(style="padding:1rem;margin-bottom:1rem;border-color:#22C55E;color:#15803D;")
+      | ✓ Request updated successfully.
+
+  h2(style="font-family:var(--font-display);font-size:20px;font-weight:400;color:var(--gray-900);margin-bottom:1rem;margin-top:1rem;") Incoming requests
+  p(style="color:var(--gray-500);font-size:14px;margin-bottom:1rem;") People who want to learn from your skills.
+
+  if incoming.length === 0
+    .card(style="padding:1.5rem;text-align:center;color:var(--gray-500);margin-bottom:2rem;")
+      | No incoming requests yet.
+  else
+    each r in incoming
+      .card(style="padding:1.25rem;margin-bottom:0.75rem;display:flex;align-items:center;gap:1rem;")
+        .avatar(style="width:36px;height:36px;font-size:14px;")= r.requester_name ? r.requester_name[0] : 'U'
+        div(style="flex:1;")
+          h3(style="font-size:15px;font-weight:600;color:var(--gray-900);")= r.requester_name
+          p(style="font-size:13px;color:var(--gray-500);margin-top:2px;")
+            | wants to learn 
+            strong= r.skill_title
+        div
+          if r.status === 'Pending'
+            form(method="POST" action=`/requests/${r.id}/accept` style="display:inline;")
+              button.btn.btn-primary(type="submit") Accept
+            form(method="POST" action=`/requests/${r.id}/reject` style="display:inline;margin-left:6px;")
+              button.btn.btn-ghost(type="submit") Reject
+          else
+            span.badge(class=r.status === 'Accepted' ? 'badge-blue' : 'badge-gray')= r.status
+
+  h2(style="font-family:var(--font-display);font-size:20px;font-weight:400;color:var(--gray-900);margin-bottom:1rem;margin-top:2rem;") Outgoing requests
+  p(style="color:var(--gray-500);font-size:14px;margin-bottom:1rem;") Skills you've requested from others.
+
+  if outgoing.length === 0
+    .card(style="padding:1.5rem;text-align:center;color:var(--gray-500);")
+      | You haven't requested any skills yet.
+  else
+    each r in outgoing
+      .card(style="padding:1.25rem;margin-bottom:0.75rem;display:flex;align-items:center;gap:1rem;")
+        .avatar(style="width:36px;height:36px;font-size:14px;")= r.owner_name ? r.owner_name[0] : 'U'
+        div(style="flex:1;")
+          h3(style="font-size:15px;font-weight:600;color:var(--gray-900);")
+            a(href=`/skills/${r.skill_id}` style="color:inherit;")= r.skill_title
+          p(style="font-size:13px;color:var(--gray-500);margin-top:2px;")
+            | from #{r.owner_name}
+        div
+          span.badge(class=r.status === 'Accepted' ? 'badge-blue' : (r.status === 'Rejected' ? 'badge-gray' : 'badge-gray'))= r.status

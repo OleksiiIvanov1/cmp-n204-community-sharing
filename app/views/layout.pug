@@ -95,6 +95,8 @@ html(lang="en")
       ul.nav-links
         li: a(href="/skills") Browse Skills
         li: a(href="/users") Community
+        if currentUser
+          li: a(href="/requests") Requests
       .nav-actions
         if currentUser
           a.btn.btn-ghost(href=`/users/${currentUser.id}`) Hi, #{currentUser.name}
