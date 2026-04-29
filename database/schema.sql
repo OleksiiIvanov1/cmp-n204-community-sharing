@@ -16,9 +16,6 @@ DROP TABLE IF EXISTS categories;
 
 -- ------------------------------------------------------------
 -- Table 1: categories
--- Holds broad groupings for skills, e.g. "Programming",
--- "Languages", "Career". Skills reference this table via
--- category_id.
 -- ------------------------------------------------------------
 
 CREATE TABLE categories (
@@ -29,8 +26,6 @@ CREATE TABLE categories (
 
 -- ------------------------------------------------------------
 -- Table 2: users
--- The people who sign up to Community Share. Each user can
--- offer multiple skills and can make multiple requests.
 -- password_hash stores a bcrypt hash, never plain text.
 -- ------------------------------------------------------------
 
@@ -45,9 +40,6 @@ CREATE TABLE users (
 
 -- ------------------------------------------------------------
 -- Table 3: skills
--- The skills users offer to share with the community.
--- Each skill belongs to ONE user (the offerer) and ONE
--- category. These relationships are enforced via foreign keys.
 -- ------------------------------------------------------------
 
 CREATE TABLE skills (
@@ -64,9 +56,6 @@ CREATE TABLE skills (
 
 -- ------------------------------------------------------------
 -- Table 4: requests
--- When one user wants to receive a skill from another user.
--- Status starts as 'Pending' and the skill owner can update
--- it to 'Accepted' or 'Rejected'.
 -- ------------------------------------------------------------
 
 CREATE TABLE requests (
@@ -82,8 +71,6 @@ CREATE TABLE requests (
 
 -- ============================================================
 -- Sample Data
--- A small starter set so the application has data to display
--- immediately after a fresh install. Safe to remove or extend.
 -- ============================================================
 
 -- Categories
@@ -98,9 +85,9 @@ INSERT INTO categories (name) VALUES
 -- Sample password for all 3 users is "password123"
 -- (bcrypt hash, for development only)
 INSERT INTO users (name, email, password_hash) VALUES
-  ('Alex Carter', 'alex@example.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'),
-  ('Daniela Rivera', 'daniela@example.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'),
-  ('Ahmed Malik', 'ahmed@example.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy');
+  ('Alex Carter', 'alex@example.com', '$2b$10$1Jo9xEKlJ55XBucA9yvnuORYAtWtgna765stoYJqxVsL1xdP4Vnf2'),
+  ('Daniela Rivera', 'daniela@example.com', '$2b$10$1Jo9xEKlJ55XBucA9yvnuORYAtWtgna765stoYJqxVsL1xdP4Vnf2'),
+  ('Ahmed Malik', 'ahmed@example.com', '$2b$10$1Jo9xEKlJ55XBucA9yvnuORYAtWtgna765stoYJqxVsL1xdP4Vnf2');
 
 -- Skills
 INSERT INTO skills (title, description, user_id, category_id) VALUES
@@ -111,4 +98,3 @@ INSERT INTO skills (title, description, user_id, category_id) VALUES
 -- A sample request: Daniela (id 2) requests the Java skill (id 1)
 INSERT INTO requests (skill_id, requester_id) VALUES
   (1, 2);
-  

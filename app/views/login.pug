@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  .page-header
+    h1 Welcome back
+    p Log in to your Community Share account.
+
+  if error
+    .card(style="padding: 1rem; margin-bottom: 1rem; border-color: #EF4444; color: #B91C1C;")
+      = error
+
+  form(method="POST" action="/login" style="max-width: 420px;")
+    .card(style="padding: 2rem;")
+      label(for="email" style="display:block; font-size:13px; color:#475569; margin-bottom:6px;") Email
+      input#email(name="email" type="email" required style="width:100%; padding:10px 12px; border:1px solid #E2E8F0; border-radius:8px; margin-bottom:1rem; font-family:inherit; font-size:14px;")
+
+      label(for="password" style="display:block; font-size:13px; color:#475569; margin-bottom:6px;") Password
+      input#password(name="password" type="password" required style="width:100%; padding:10px 12px; border:1px solid #E2E8F0; border-radius:8px; margin-bottom:1.5rem; font-family:inherit; font-size:14px;")
+
+      button.btn.btn-primary(type="submit" style="width:100%;") Log in
+
+      p(style="text-align:center; font-size:13px; color:#64748B; margin-top:1rem;")
+        | New here?&nbsp;
+        a(href="/register") Create an account

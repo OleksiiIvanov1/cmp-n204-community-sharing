@@ -207,7 +207,65 @@ app.get("/register", (req, res) => {
     res.render("register", { error: null });
 });
 
+// ======================
+// LOGIN — show form
+// ======================
+app.get("/login", (req, res) => {
+    res.render("login", { error: null });
+});
 
+
+// ======================
+// LOGIN — handle form submission
+// ======================
+app.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.render("login", { error: "Email and password are required." });
+        }
+
+        // Find the user
+        const rows = await db.query(
+            "SELECT id, name, email, password_hash FROM users WHERE email = ?",
+            [email]
+        );
+
+        if (!rows.length) {
+            // Same message whether email or password is wrong (security best practice)
+            return res.render("login", { error: "Invalid email or password." });
+        }
+
+        // Compare the entered password to the stored hash
+        const match = await bcrypt.compare(password, rows[0].password_hash);
+        if (!match) {
+            return res.render("login", { error: "Invalid email or password." });
+        }
+
+        // Set the session
+        req.session.user = {
+            id: rows[0].id,
+            name: rows[0].name,
+            email: rows[0].email
+        };
+
+        res.redirect("/skills");
+    } catch (err) {
+        console.error(err);
+        res.render("login", { error: "Something went wrong. Please try again." });
+    }
+});
+
+
+// ======================
+// LOGOUT — destroy the session
+// ======================
+app.get("/logout", (req, res) => {
+    req.session.destroy(() => {
+        res.redirect("/login");
+    });
+});
 // ======================
 // REGISTER — handle form submission
 // ======================

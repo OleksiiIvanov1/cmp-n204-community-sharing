@@ -87,19 +87,23 @@ html(lang="en")
       a { color: #2563EB; text-decoration: none; }
 
 
+  body
     nav
       a.nav-brand(href="/")
         .nav-icon C
-        span.nav-brand-text Community share
+        span.nav-brand-text Community Share
       ul.nav-links
         li: a(href="/skills") Browse Skills
         li: a(href="/users") Community
       .nav-actions
-        a.btn.btn-ghost(href="/") Log in
-        a.btn.btn-primary(href="/") Join free
+        if currentUser
+          a.btn.btn-ghost(href=`/users/${currentUser.id}`) Hi, #{currentUser.name}
+          a.btn.btn-primary(href="/logout") Log out
+        else
+          a.btn.btn-ghost(href="/login") Log in
+          a.btn.btn-primary(href="/register") Join free
 
     main
       block content
 
-    footer © 2026 Community share Community
-    
+    footer © 2026 Community share 
