@@ -2,10 +2,26 @@ require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
+const bcrypt = require("bcrypt");
+const session = require("express-session");
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Session middleware — keeps users logged in across requests
+app.use(session({
+    secret: process.env.SESSION_SECRET || "dev-secret-change-me",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 hours
+}));
+
+// Make the logged-in user available to all Pug views as `currentUser`
+app.use((req, res, next) => {
+    res.locals.currentUser = req.session.user || null;
+    next();
+});
 
 app.use(express.static("static"));
 
@@ -28,7 +44,7 @@ app.get("/", (req, res) => {
 // ======================
 app.get("/db_test", async (req, res) => {
     try {
-        const results = await db.query("SELECT * FROM users");
+        const results = await db.query("SELECT id, name, email FROM users");
         res.json(results);
     } catch (err) {
         res.status(500).send(err);
@@ -38,8 +54,6 @@ app.get("/db_test", async (req, res) => {
 
 // ======================
 // LIST ALL SKILLS
-// Joins skills with users (to get the offerer's name)
-// and categories (to get the category name).
 // ======================
 app.get("/skills", async (req, res) => {
     try {
@@ -55,7 +69,6 @@ app.get("/skills", async (req, res) => {
             JOIN categories ON skills.category_id = categories.id
         `);
 
-        // Add a default level so the Pug template renders cleanly.
         const skills = rows.map(s => ({
             id: s.id,
             title: s.title,
@@ -187,3 +200,50 @@ app.listen(3000, () => {
 });
 
 module.exports = app;
+// ======================
+// REGISTER — show form
+// ======================
+app.get("/register", (req, res) => {
+    res.render("register", { error: null });
+});
+
+
+// ======================
+// REGISTER — handle form submission
+// ======================
+app.post("/register", async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+        // Basic validation
+        if (!name || !email || !password) {
+            return res.render("register", { error: "All fields are required." });
+        }
+        if (password.length < 8) {
+            return res.render("register", { error: "Password must be at least 8 characters." });
+        }
+
+        // Check if email is already taken
+        const existing = await db.query("SELECT id FROM users WHERE email = ?", [email]);
+        if (existing.length) {
+            return res.render("register", { error: "An account with that email already exists." });
+        }
+
+        // Hash the password before storing
+        const password_hash = await bcrypt.hash(password, 10);
+
+        // Insert the new user
+        const result = await db.query(
+            "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
+            [name, email, password_hash]
+        );
+
+        // Log them in immediately by setting the session
+        req.session.user = { id: result.insertId, name, email };
+
+        res.redirect("/skills");
+    } catch (err) {
+        console.error(err);
+        res.render("register", { error: "Something went wrong. Please try again." });
+    }
+});
