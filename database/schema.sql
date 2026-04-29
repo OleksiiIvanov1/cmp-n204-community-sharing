@@ -6,6 +6,14 @@
 -- ============================================================
 
 
+-- Drop existing tables in reverse order of dependency
+-- (requests depends on skills+users; skills depends on users+categories)
+DROP TABLE IF EXISTS requests;
+DROP TABLE IF EXISTS skills;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS categories;
+
+
 -- ------------------------------------------------------------
 -- Table 1: categories
 -- Holds broad groupings for skills, e.g. "Programming",
@@ -17,18 +25,24 @@ CREATE TABLE categories (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50) NOT NULL UNIQUE
 );
+
+
 -- ------------------------------------------------------------
 -- Table 2: users
 -- The people who sign up to Community Share. Each user can
 -- offer multiple skills and can make multiple requests.
+-- password_hash stores a bcrypt hash, never plain text.
 -- ------------------------------------------------------------
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
 -- ------------------------------------------------------------
 -- Table 3: skills
 -- The skills users offer to share with the community.
@@ -46,13 +60,13 @@ CREATE TABLE skills (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (category_id) REFERENCES categories(id)
 );
+
+
 -- ------------------------------------------------------------
 -- Table 4: requests
 -- When one user wants to receive a skill from another user.
--- Each request links to ONE skill (which itself links to the
--- skill's owner) and ONE user (the requester).
--- The status starts as 'Pending' and the skill owner can
--- update it to 'Accepted' or 'Rejected'.
+-- Status starts as 'Pending' and the skill owner can update
+-- it to 'Accepted' or 'Rejected'.
 -- ------------------------------------------------------------
 
 CREATE TABLE requests (
@@ -64,6 +78,8 @@ CREATE TABLE requests (
   FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE,
   FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+
 -- ============================================================
 -- Sample Data
 -- A small starter set so the application has data to display
@@ -79,10 +95,12 @@ INSERT INTO categories (name) VALUES
   ('Music');
 
 -- Users
-INSERT INTO users (name, email) VALUES
-  ('Alex Carter', 'alex@example.com'),
-  ('Daniela Rivera', 'daniela@example.com'),
-  ('Ahmed Malik', 'ahmed@example.com');
+-- Sample password for all 3 users is "password123"
+-- (bcrypt hash, for development only)
+INSERT INTO users (name, email, password_hash) VALUES
+  ('Alex Carter', 'alex@example.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'),
+  ('Daniela Rivera', 'daniela@example.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'),
+  ('Ahmed Malik', 'ahmed@example.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy');
 
 -- Skills
 INSERT INTO skills (title, description, user_id, category_id) VALUES
