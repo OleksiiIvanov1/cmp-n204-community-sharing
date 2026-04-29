@@ -3,36 +3,43 @@ extends layout
 block content
   a(href="/skills" style="display:inline-flex;align-items:center;gap:6px;color:var(--gray-500);font-size:14px;margin-bottom:1.25rem;") ← Back to listings
 
+  if requested
+    .card(style="padding:1rem;margin-bottom:1rem;border-color:#22C55E;color:#15803D;")
+      | ✓ Your request was sent successfully.
+  if already
+    .card(style="padding:1rem;margin-bottom:1rem;border-color:#F59E0B;color:#92400E;")
+      | You already have a pending request for this skill.
+
   .detail-hero
     .tag-list
-      span.badge.badge-blue= skill.category || "Skill"
-      span.badge.badge-gray= skill.level || "All levels"
+      span.badge.badge-blue= skill.category
+      span.badge.badge-gray= skill.level
     h1= skill.title
-    p= skill.description || "This community member is offering to share this valuable skill with others. Connect with them to arrange a skill exchange that benefits both parties."
+    p= skill.description
     .detail-meta
       .detail-meta-item
-        .avatar(style="width:28px;height:28px;font-size:11px;") #{skill.teacher ? skill.teacher[0] : "T"}
-        span Offered by #{skill.teacher || "A community member"}
-      .detail-meta-dot
-      .detail-meta-item 📍 #{skill.location || "Online or in-person"}
-      .detail-meta-dot
-      .detail-meta-item 🕐 #{skill.availability || "Flexible schedule"}
-    
+        .avatar(style="width:24px;height:24px;font-size:11px;")= skill.teacher ? skill.teacher[0] : 'U'
+        span Offered by #{skill.teacher}
+      span.detail-meta-dot
+      .detail-meta-item 📍 Online or in-person
+      span.detail-meta-dot
+      .detail-meta-item ⏱ Flexible schedule
+
     div(style="margin-top:1.5rem;")
-      a.btn.btn-primary(href="#contact") Request Exchange
+      if currentUser
+        form(method="POST" action=`/skills/${skill.id}/request` style="display:inline;")
+          button.btn.btn-primary(type="submit") Request Exchange
+      else
+        a.btn.btn-primary(href="/login") Log in to request
       a.btn.btn-ghost(href="/users" style="margin-left:8px;") View Teacher
 
-  div(style="display:grid;grid-template-columns:2fr 1fr;gap:1.25rem;")
-    div
-      .card(style="padding:1.5rem;")
-        p.section-title About this skill
-        p(style="color:var(--gray-600);font-size:14.5px;line-height:1.8;") 
-          | This skill exchange is a great opportunity to learn from a fellow community member.
-          | Sessions can be arranged flexibly to suit both parties. All experience levels welcome.
-    div
-      .card(style="padding:1.25rem;")
-        p.section-title Looking to exchange for
-        .tag-list(style="margin-bottom:0;")
-          span.badge.badge-gray #{skill.wantedSkill || "Any skill"}
-          span.badge.badge-gray #{skill.wantedSkill2 || "Open to offers"}
+  .grid-2
+    .card(style="padding:1.5rem;")
+      p.section-title About this skill
+      p This skill exchange is a great opportunity to learn from a fellow community member. Sessions can be arranged flexibly to suit both parties. All experience levels welcome.
 
+    .card(style="padding:1.5rem;")
+      p.section-title Looking to exchange
+      .tag-list
+        span.badge.badge-blue Any skill
+        span.badge.badge-gray Open to offers

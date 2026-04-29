@@ -130,7 +130,11 @@ app.get("/skills/:id", async (req, res) => {
             teacher: rows[0].teacher
         };
 
-        res.render("detail", { skill });
+       res.render("detail", {
+            skill,
+            requested: req.query.requested === "1",
+            already: req.query.already === "1"
+        });
     } catch (err) {
         res.status(500).send(err);
     }
@@ -204,7 +208,53 @@ app.get("/users/:id", async (req, res) => {
         res.status(500).send(err);
     }
 });
+// ======================
+// REQUEST a skill (must be logged in)
+// ======================
+app.post("/skills/:id/request", async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
 
+        const skillId = req.params.id;
+        const requesterId = req.session.user.id;
+
+        // Check the skill exists and isn't the user's own skill
+        const skillRows = await db.query(
+            "SELECT id, user_id FROM skills WHERE id = ?",
+            [skillId]
+        );
+
+        if (!skillRows.length) {
+            return res.status(404).send("Skill not found");
+        }
+
+        if (skillRows[0].user_id === requesterId) {
+            return res.status(400).send("You can't request your own skill.");
+        }
+
+        // Prevent duplicate pending requests
+        const existing = await db.query(
+            "SELECT id FROM requests WHERE skill_id = ? AND requester_id = ? AND status = 'Pending'",
+            [skillId, requesterId]
+        );
+
+        if (existing.length) {
+            return res.redirect(`/skills/${skillId}?already=1`);
+        }
+
+        await db.query(
+            "INSERT INTO requests (skill_id, requester_id) VALUES (?, ?)",
+            [skillId, requesterId]
+        );
+
+        res.redirect(`/skills/${skillId}?requested=1`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
 
 // ======================
 // SERVER
