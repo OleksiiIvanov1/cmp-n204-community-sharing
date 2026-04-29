@@ -53,11 +53,14 @@ app.get("/db_test", async (req, res) => {
 
 
 // ======================
-// LIST ALL SKILLS
+// LIST ALL SKILLS (with optional category filter)
 // ======================
 app.get("/skills", async (req, res) => {
     try {
-        const rows = await db.query(`
+        const selectedCategory = req.query.cat || null;
+
+        // Build the query dynamically depending on whether a filter is applied
+        let sql = `
             SELECT
                 skills.id,
                 skills.title,
@@ -67,7 +70,15 @@ app.get("/skills", async (req, res) => {
             FROM skills
             JOIN users ON skills.user_id = users.id
             JOIN categories ON skills.category_id = categories.id
-        `);
+        `;
+        const params = [];
+
+        if (selectedCategory) {
+            sql += " WHERE categories.name = ?";
+            params.push(selectedCategory);
+        }
+
+        const rows = await db.query(sql, params);
 
         const skills = rows.map(s => ({
             id: s.id,
@@ -78,12 +89,15 @@ app.get("/skills", async (req, res) => {
             level: "All levels"
         }));
 
-        res.render("listings", { skills });
+        // Get all categories so we can render the filter badges
+        const categoryRows = await db.query("SELECT name FROM categories ORDER BY name");
+        const categories = categoryRows.map(c => c.name);
+
+        res.render("listings", { skills, categories, selectedCategory });
     } catch (err) {
         res.status(500).send(err);
     }
 });
-
 
 // ======================
 // VIEW ONE SKILL IN DETAIL

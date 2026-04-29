@@ -3,25 +3,26 @@ extends layout
 block content
   .page-header
     h1 Browse Skills
-    p Discover skills and languages offered by our community
-  
-  .tag-list
-    a.badge.badge-blue(href="/skills?cat=language") Languages
-    a.badge.badge-gray(href="/skills?cat=tech") Technology
-    a.badge.badge-gray(href="/skills?cat=music") Music
-    a.badge.badge-gray(href="/skills?cat=art") Art &amp; Design
-    a.badge.badge-gray(href="/skills?cat=cooking") Cooking
-  
-  .grid-3
-    each skill in skills
-      a.card.skill-card(href="/skills/" + skill.id)
-        .skill-card-header
-          h3= skill.title
-          span.badge.badge-blue= skill.category || "Skill"
-        p= skill.description || "A community member is offering to share this skill with others in exchange."
-        .skill-card-footer
-          .skill-card-user
-            .avatar(style="width:28px;height:28px;font-size:11px;") #{skill.teacher ? skill.teacher[0] : "A"}
-            span= skill.teacher || "Community member"
-          span.badge.badge-gray= skill.level || "All levels"
+    p Find someone in the community offering what you want to learn.
 
+  .tag-list
+    a.badge(href="/skills" class=selectedCategory ? "badge-gray" : "badge-blue") All
+    each cat in categories
+      a.badge(href=`/skills?cat=${encodeURIComponent(cat)}` class=cat === selectedCategory ? "badge-blue" : "badge-gray")= cat
+
+  if skills.length === 0
+    .card(style="padding: 1.5rem; text-align: center; color: var(--gray-500);")
+      | No skills found in this category yet.
+  else
+    .grid-3
+      each skill in skills
+        a.card.skill-card(href="/skills/" + skill.id)
+          .skill-card-header
+            h3= skill.title
+            span.badge.badge-blue= skill.category
+          p= skill.description
+          .skill-card-footer
+            .skill-card-user
+              .avatar(style="width:24px;height:24px;font-size:11px;")= skill.teacher ? skill.teacher[0] : 'U'
+              span= skill.teacher
+            span.badge.badge-gray= skill.level
