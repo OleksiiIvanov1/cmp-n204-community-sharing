@@ -24,11 +24,12 @@ block content
           p(style="font-size:13px;color:var(--gray-500);margin-top:2px;")
             | wants to learn 
             strong= r.skill_title
-        div
+        div(style="display:flex;align-items:center;gap:6px;")
+          a.btn.btn-ghost(href=`/messages/${r.requester_id}` style="font-size:13px;") Message
           if r.status === 'Pending'
             form(method="POST" action=`/requests/${r.id}/accept` style="display:inline;")
               button.btn.btn-primary(type="submit") Accept
-            form(method="POST" action=`/requests/${r.id}/reject` style="display:inline;margin-left:6px;")
+            form(method="POST" action=`/requests/${r.id}/reject` style="display:inline;")
               button.btn.btn-ghost(type="submit") Reject
           else
             span.badge(class=r.status === 'Accepted' ? 'badge-blue' : 'badge-gray')= r.status
@@ -48,5 +49,6 @@ block content
             a(href=`/skills/${r.skill_id}` style="color:inherit;")= r.skill_title
           p(style="font-size:13px;color:var(--gray-500);margin-top:2px;")
             | from #{r.owner_name}
-        div
+        div(style="display:flex;align-items:center;gap:6px;")
+          a.btn.btn-ghost(href=`/messages/${r.owner_id}` style="font-size:13px;") Message
           span.badge(class=r.status === 'Accepted' ? 'badge-blue' : (r.status === 'Rejected' ? 'badge-gray' : 'badge-gray'))= r.status

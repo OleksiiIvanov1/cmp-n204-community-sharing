@@ -9,8 +9,11 @@ block content
       div(style="margin-top:10px;")
         span.badge.badge-blue #{skills.length} skills offered
     if isOwnProfile
-      div(style="margin-left:auto;")
+     div(style="margin-left:auto;display:flex;gap:8px;")
+      if isOwnProfile
         a(href="/profile/edit" style="background:#2563eb;color:white;padding:10px 18px;text-decoration:none;border-radius:6px;font-size:14px;font-weight:500;") Edit Profile
+      else if currentUser
+        a(href=`/messages/${user.id}` style="background:#2563eb;color:white;padding:10px 18px;text-decoration:none;border-radius:6px;font-size:14px;font-weight:500;") Message
   .card(style="padding:1.5rem;")
     p.section-title Skills offered
     if skills.length === 0

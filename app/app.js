@@ -203,8 +203,9 @@ app.get("/users/:id", async (req, res) => {
             level: "All levels"
         }));
 
-       res.render("profile", { user, skills, isOwnProfile: req.session.user && req.session.user.id === parseInt(req.params.id) });
+res.render("profile", { user, skills, isOwnProfile: req.session.user && req.session.user.id === parseInt(req.params.id), currentUser: req.session.user });
     } catch (err) {
+        console.error(err);
         res.status(500).send(err);
     }
 });
@@ -399,6 +400,7 @@ app.post("/requests/:id/reject", async (req, res) => {
         res.status(500).send(err);
     }
 });
+
 // ======================
 // SERVER
 // ======================
@@ -620,12 +622,13 @@ app.get("/requests", async (req, res) => {
         const userId = req.session.user.id;
 
         // Incoming: requests for skills I own
-        const incoming = await db.query(`
+      const incoming = await db.query(`
             SELECT
                 requests.id,
                 requests.status,
                 requests.created_at,
                 skills.title AS skill_title,
+                users.id AS requester_id,
                 users.name AS requester_name
             FROM requests
             JOIN skills ON requests.skill_id = skills.id
@@ -642,6 +645,7 @@ app.get("/requests", async (req, res) => {
                 requests.created_at,
                 skills.id AS skill_id,
                 skills.title AS skill_title,
+                users.id AS owner_id,
                 users.name AS owner_name
             FROM requests
             JOIN skills ON requests.skill_id = skills.id
