@@ -97,6 +97,7 @@ html(lang="en")
         li: a(href="/users") Community
         if currentUser
           li: a(href="/requests") Requests
+          li: a(href="/profile") Profile
       .nav-actions
         if currentUser
           a.btn.btn-ghost(href=`/users/${currentUser.id}`) Hi, #{currentUser.name}
