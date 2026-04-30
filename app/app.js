@@ -721,6 +721,7 @@ app.post("/messages/:userId", async (req, res) => {
         }
 
         const myId = req.session.user.id;
+        const myName = req.session.user.name;
         const otherId = parseInt(req.params.userId);
         const { body } = req.body;
 
@@ -730,6 +731,8 @@ app.post("/messages/:userId", async (req, res) => {
         if (!body || !body.trim()) {
             return res.redirect(`/messages/${otherId}`);
         }
+
+        const messageBody = body.trim();
 
         // Verify recipient exists
         const recipientRows = await db.query(
@@ -743,8 +746,20 @@ app.post("/messages/:userId", async (req, res) => {
         // Insert the message
         await db.query(
             "INSERT INTO messages (sender_id, recipient_id, body) VALUES (?, ?, ?)",
-            [myId, otherId, body.trim()]
+            [myId, otherId, messageBody]
         );
+
+        // Notify recipient via email (non-blocking)
+        const recipient = recipientRows[0];
+        // Truncate long messages for the email preview
+        const preview = messageBody.length > 200
+            ? messageBody.substring(0, 200) + "..."
+            : messageBody;
+        sendMail({
+            to: recipient.email,
+            subject: `New message from ${myName} on Community Share`,
+            text: `Hi ${recipient.name},\n\n${myName} sent you a message:\n\n"${preview}"\n\nReply by logging in: http://localhost:3000/messages/${myId}\n\n— Community Share`
+        });
 
         res.redirect(`/messages/${otherId}`);
     } catch (err) {
