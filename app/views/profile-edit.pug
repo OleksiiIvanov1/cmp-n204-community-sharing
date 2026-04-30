@@ -1,0 +1,23 @@
+extends layout
+block content
+  a(href="/profile" style="display:inline-flex;align-items:center;gap:6px;color:var(--gray-500);font-size:14px;margin-bottom:1.25rem;") ← Back to profile
+  .card(style="padding:2rem;max-width:540px;margin:0 auto;")
+    h1(style="font-family:var(--font-display);font-weight:400;margin-bottom:1.5rem;") Edit Profile
+    if error
+      div(style="background:#fee;border:1px solid #fcc;color:#900;padding:10px 14px;border-radius:6px;margin-bottom:1rem;")= error
+    if success
+      div(style="background:#efe;border:1px solid #cfc;color:#060;padding:10px 14px;border-radius:6px;margin-bottom:1rem;")= success
+    form(method="POST" action="/profile/edit")
+      div(style="margin-bottom:1rem;")
+        label(for="name" style="display:block;margin-bottom:6px;font-weight:500;color:var(--gray-700);") Name
+        input#name(type="text" name="name" value=user.name required style="width:100%;padding:10px;border:1px solid var(--gray-200);border-radius:6px;font-size:14px;box-sizing:border-box;")
+      div(style="margin-bottom:1rem;")
+        label(for="email" style="display:block;margin-bottom:6px;font-weight:500;color:var(--gray-700);") Email
+        input#email(type="email" name="email" value=user.email required style="width:100%;padding:10px;border:1px solid var(--gray-200);border-radius:6px;font-size:14px;box-sizing:border-box;")
+      div(style="margin-bottom:1.5rem;")
+        label(for="password" style="display:block;margin-bottom:6px;font-weight:500;color:var(--gray-700);") New password
+        input#password(type="password" name="password" minlength="8" placeholder="Leave blank to keep current password" style="width:100%;padding:10px;border:1px solid var(--gray-200);border-radius:6px;font-size:14px;box-sizing:border-box;")
+      div(style="display:flex;gap:10px;")
+        button(type="submit" style="background:#2563eb;color:white;padding:10px 22px;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-weight:500;") Save Changes
+        a(href="/profile" style="background:var(--gray-100);color:var(--gray-700);padding:10px 22px;text-decoration:none;border-radius:6px;font-size:14px;font-weight:500;display:inline-flex;align-items:center;") Cancel
+        

@@ -1,22 +1,23 @@
 extends layout
-
 block content
   a(href="/users" style="display:inline-flex;align-items:center;gap:6px;color:var(--gray-500);font-size:14px;margin-bottom:1.25rem;") ← Back to members
-
   .profile-hero
-    .avatar.avatar-lg= user.name ? user.name[0] : "U"
+    .avatar.avatar-lg= user.name ? user.name[0].toUpperCase() : "U"
     .profile-info
       h1= user.name
       p= user.email
       div(style="margin-top:10px;")
         span.badge.badge-blue #{skills.length} skills offered
-    div(style="margin-left:auto;")
-      
+    if isOwnProfile
+      div(style="margin-left:auto;")
+        a(href="/profile/edit" style="background:#2563eb;color:white;padding:10px 18px;text-decoration:none;border-radius:6px;font-size:14px;font-weight:500;") Edit Profile
   .card(style="padding:1.5rem;")
     p.section-title Skills offered
-    .grid-3
-      each skill in skills
-        a.card.skill-card(href="/skills/" + (skill.id || "1") style="box-shadow:none;border-color:var(--gray-100);")
-          h3= skill.title
-          p= skill.description || "Available for skill exchange"
-
+    if skills.length === 0
+      p(style="color:var(--gray-500);") No skills offered yet.
+    else
+      .grid-3
+        each skill in skills
+          a.card.skill-card(href="/skills/" + (skill.id || "1") style="box-shadow:none;border-color:var(--gray-100);")
+            h3= skill.title
+            p= skill.description || "Available for skill exchange"

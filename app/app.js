@@ -203,7 +203,7 @@ app.get("/users/:id", async (req, res) => {
             level: "All levels"
         }));
 
-        res.render("profile", { user, skills });
+       res.render("profile", { user, skills, isOwnProfile: req.session.user && req.session.user.id === parseInt(req.params.id) });
     } catch (err) {
         res.status(500).send(err);
     }
@@ -491,5 +491,101 @@ app.post("/register", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.render("register", { error: "Something went wrong. Please try again." });
+    }
+});
+// ======================
+// MY PROFILE — redirect to my own /users/:id page
+// ======================
+app.get("/profile", (req, res) => {
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
+    res.redirect("/users/" + req.session.user.id);
+});
+
+// ======================
+// EDIT MY PROFILE — show form
+// ======================
+app.get("/profile/edit", async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
+        const rows = await db.query(
+            "SELECT id, name, email FROM users WHERE id = ?",
+            [req.session.user.id]
+        );
+        if (!rows.length) {
+            return res.redirect("/login");
+        }
+        res.render("profile-edit", { user: rows[0], error: null, success: null });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
+
+// ======================
+// EDIT MY PROFILE — handle submission
+// ======================
+app.post("/profile/edit", async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
+
+        const userId = req.session.user.id;
+        const { name, email, password } = req.body;
+
+        const renderError = async (msg) => {
+            const rows = await db.query("SELECT id, name, email FROM users WHERE id = ?", [userId]);
+            return res.render("profile-edit", { user: rows[0], error: msg, success: null });
+        };
+
+        if (!name || !email) {
+            return renderError("Name and email are required.");
+        }
+
+        if (password && password.length > 0 && password.length < 8) {
+            return renderError("Password must be at least 8 characters (or leave blank to keep current).");
+        }
+
+        // Check if email is taken by another account
+        const existing = await db.query(
+            "SELECT id FROM users WHERE email = ? AND id != ?",
+            [email, userId]
+        );
+        if (existing.length) {
+            return renderError("That email is already in use by another account.");
+        }
+
+        // Update name and email
+        await db.query(
+            "UPDATE users SET name = ?, email = ? WHERE id = ?",
+            [name, email, userId]
+        );
+
+        // Update password if provided
+        if (password && password.length >= 8) {
+            const password_hash = await bcrypt.hash(password, 10);
+            await db.query(
+                "UPDATE users SET password_hash = ? WHERE id = ?",
+                [password_hash, userId]
+            );
+        }
+
+        // Update session so nav reflects new name/email immediately
+        req.session.user.name = name;
+        req.session.user.email = email;
+
+        const updated = await db.query("SELECT id, name, email FROM users WHERE id = ?", [userId]);
+        res.render("profile-edit", {
+            user: updated[0],
+            error: null,
+            success: "Profile updated successfully."
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
     }
 });
