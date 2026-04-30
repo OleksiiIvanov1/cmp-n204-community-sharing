@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+const { sendMail } = require("./mailer");
 const express = require("express");
 const path = require("path");
 const bcrypt = require("bcrypt");
@@ -219,10 +219,11 @@ app.post("/skills/:id/request", async (req, res) => {
 
         const skillId = req.params.id;
         const requesterId = req.session.user.id;
+        const requesterName = req.session.user.name;
 
         // Check the skill exists and isn't the user's own skill
         const skillRows = await db.query(
-            "SELECT id, user_id FROM skills WHERE id = ?",
+            "SELECT id, user_id, title FROM skills WHERE id = ?",
             [skillId]
         );
 
@@ -249,6 +250,19 @@ app.post("/skills/:id/request", async (req, res) => {
             [skillId, requesterId]
         );
 
+        // Notify the skill owner by email (non-blocking)
+        const ownerRows = await db.query(
+            "SELECT name, email FROM users WHERE id = ?",
+            [skillRows[0].user_id]
+        );
+        if (ownerRows.length) {
+            sendMail({
+                to: ownerRows[0].email,
+                subject: `New exchange request for "${skillRows[0].title}"`,
+                text: `Hi ${ownerRows[0].name},\n\n${requesterName} has requested to exchange your skill "${skillRows[0].title}" on Community Share.\n\nLog in to view and respond: http://localhost:3000/requests\n\n— Community Share`
+            });
+        }
+
         res.redirect(`/skills/${skillId}?requested=1`);
     } catch (err) {
         console.error(err);
@@ -258,60 +272,6 @@ app.post("/skills/:id/request", async (req, res) => {
 // ======================
 // VIEW MY REQUESTS (incoming + outgoing)
 // ======================
-app.get("/requests", async (req, res) => {
-    try {
-        if (!req.session.user) {
-            return res.redirect("/login");
-        }
-
-        const userId = req.session.user.id;
-
-        // Incoming: requests for skills I own
-        const incoming = await db.query(`
-            SELECT
-                requests.id,
-                requests.status,
-                requests.created_at,
-                skills.title AS skill_title,
-                users.name AS requester_name
-            FROM requests
-            JOIN skills ON requests.skill_id = skills.id
-            JOIN users ON requests.requester_id = users.id
-            WHERE skills.user_id = ?
-            ORDER BY requests.created_at DESC
-        `, [userId]);
-
-        // Outgoing: requests I made
-        const outgoing = await db.query(`
-            SELECT
-                requests.id,
-                requests.status,
-                requests.created_at,
-                skills.id AS skill_id,
-                skills.title AS skill_title,
-                users.name AS owner_name
-            FROM requests
-            JOIN skills ON requests.skill_id = skills.id
-            JOIN users ON skills.user_id = users.id
-            WHERE requests.requester_id = ?
-            ORDER BY requests.created_at DESC
-        `, [userId]);
-
-        res.render("requests", {
-            incoming,
-            outgoing,
-            updated: req.query.updated === "1"
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send(err);
-    }
-});
-
-
-// ======================
-// ACCEPT a request (only the skill owner can)
-// ======================
 app.post("/requests/:id/accept", async (req, res) => {
     try {
         if (!req.session.user) {
@@ -320,12 +280,18 @@ app.post("/requests/:id/accept", async (req, res) => {
 
         const requestId = req.params.id;
         const userId = req.session.user.id;
+        const ownerName = req.session.user.name;
 
-        // Verify the logged-in user owns the skill this request is for
+        // Verify the logged-in user owns the skill, and grab info for the email
         const ownerCheck = await db.query(`
-            SELECT skills.user_id
+            SELECT
+                skills.user_id,
+                skills.title AS skill_title,
+                requester.email AS requester_email,
+                requester.name AS requester_name
             FROM requests
             JOIN skills ON requests.skill_id = skills.id
+            JOIN users AS requester ON requests.requester_id = requester.id
             WHERE requests.id = ?
         `, [requestId]);
 
@@ -338,13 +304,66 @@ app.post("/requests/:id/accept", async (req, res) => {
             [requestId]
         );
 
+        // Notify the requester
+        sendMail({
+            to: ownerCheck[0].requester_email,
+            subject: `Your request for "${ownerCheck[0].skill_title}" was accepted`,
+            text: `Hi ${ownerCheck[0].requester_name},\n\n${ownerName} accepted your exchange request for "${ownerCheck[0].skill_title}".\n\nLog in to see your requests: http://localhost:3000/requests\n\n— Community Share`
+        });
+
         res.redirect("/requests?updated=1");
     } catch (err) {
         console.error(err);
         res.status(500).send(err);
     }
 });
+// ======================
+// ACCEPT a request (only the skill owner can)
+// ======================
+app.post("/requests/:id/reject", async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
 
+        const requestId = req.params.id;
+        const userId = req.session.user.id;
+        const ownerName = req.session.user.name;
+
+        const ownerCheck = await db.query(`
+            SELECT
+                skills.user_id,
+                skills.title AS skill_title,
+                requester.email AS requester_email,
+                requester.name AS requester_name
+            FROM requests
+            JOIN skills ON requests.skill_id = skills.id
+            JOIN users AS requester ON requests.requester_id = requester.id
+            WHERE requests.id = ?
+        `, [requestId]);
+
+        if (!ownerCheck.length || ownerCheck[0].user_id !== userId) {
+            return res.status(403).send("Not allowed");
+        }
+
+        await db.query(
+            "UPDATE requests SET status = 'Rejected' WHERE id = ?",
+            [requestId]
+        );
+
+        // Notify the requester
+        sendMail({
+            to: ownerCheck[0].requester_email,
+            subject: `Your request for "${ownerCheck[0].skill_title}" was declined`,
+            text: `Hi ${ownerCheck[0].requester_name},\n\n${ownerName} declined your exchange request for "${ownerCheck[0].skill_title}". Don't worry — there are plenty of other skills on Community Share.\n\nLog in to browse: http://localhost:3000/skills\n\n— Community Share`
+        });
+
+        res.redirect("/requests?updated=1");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
 
 // ======================
 // REJECT a request (only the skill owner can)
@@ -583,6 +602,58 @@ app.post("/profile/edit", async (req, res) => {
             user: updated[0],
             error: null,
             success: "Profile updated successfully."
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
+// ======================
+// VIEW MY REQUESTS (incoming + outgoing)
+// ======================
+app.get("/requests", async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
+
+        const userId = req.session.user.id;
+
+        // Incoming: requests for skills I own
+        const incoming = await db.query(`
+            SELECT
+                requests.id,
+                requests.status,
+                requests.created_at,
+                skills.title AS skill_title,
+                users.name AS requester_name
+            FROM requests
+            JOIN skills ON requests.skill_id = skills.id
+            JOIN users ON requests.requester_id = users.id
+            WHERE skills.user_id = ?
+            ORDER BY requests.created_at DESC
+        `, [userId]);
+
+        // Outgoing: requests I made
+        const outgoing = await db.query(`
+            SELECT
+                requests.id,
+                requests.status,
+                requests.created_at,
+                skills.id AS skill_id,
+                skills.title AS skill_title,
+                users.name AS owner_name
+            FROM requests
+            JOIN skills ON requests.skill_id = skills.id
+            JOIN users ON skills.user_id = users.id
+            WHERE requests.requester_id = ?
+            ORDER BY requests.created_at DESC
+        `, [userId]);
+
+        res.render("requests", {
+            incoming,
+            outgoing,
+            updated: req.query.updated === "1"
         });
     } catch (err) {
         console.error(err);
