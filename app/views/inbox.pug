@@ -1,0 +1,24 @@
+extends layout
+block content
+  h1(style="font-family:var(--font-display);font-weight:400;margin-bottom:0.5rem;") Inbox
+  p(style="color:var(--gray-500);margin-bottom:1.5rem;") Your conversations with other members.
+  if conversations.length === 0
+    .card(style="padding:2rem;text-align:center;")
+      p(style="color:var(--gray-500);margin-bottom:0.5rem;") No conversations yet.
+      p(style="color:var(--gray-500);font-size:14px;") Start one by visiting another member's profile.
+      a(href="/users" style="display:inline-block;margin-top:1rem;background:#2563eb;color:white;padding:10px 22px;text-decoration:none;border-radius:6px;font-size:14px;font-weight:500;") Browse Community
+  else
+    .card(style="padding:0;overflow:hidden;")
+      each conv in conversations
+        a(href=`/messages/${conv.other_id}` style="display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;text-decoration:none;color:inherit;border-bottom:1px solid var(--gray-100);")
+          .avatar(style="background:#2563eb;color:white;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:500;flex-shrink:0;")= conv.other_name ? conv.other_name[0].toUpperCase() : "U"
+          div(style="flex:1;min-width:0;")
+            div(style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;")
+              p(style="font-weight:500;color:var(--gray-900);margin:0;")= conv.other_name
+              p(style="font-size:12px;color:var(--gray-500);margin:0;flex-shrink:0;")= new Date(conv.last_at).toLocaleString()
+            p(style="font-size:14px;color:var(--gray-500);margin:4px 0 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;")
+              if conv.last_sender_id === currentUser.id
+                span(style="color:var(--gray-400);") You: 
+              = conv.last_body
+          if conv.unread_count > 0
+            span(style="background:#dc2626;color:white;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;flex-shrink:0;")= conv.unread_count

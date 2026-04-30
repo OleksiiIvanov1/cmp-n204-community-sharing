@@ -752,3 +752,52 @@ app.post("/messages/:userId", async (req, res) => {
         res.status(500).send(err);
     }
 });
+// ======================
+// INBOX — list all conversations grouped by other user
+// ======================
+app.get("/inbox", async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
+
+        const myId = req.session.user.id;
+
+        // For each unique other user I've messaged with,
+        // get the last message + unread count from them
+        const conversations = await db.query(`
+            SELECT
+                other.id AS other_id,
+                other.name AS other_name,
+                latest.body AS last_body,
+                latest.sender_id AS last_sender_id,
+                latest.created_at AS last_at,
+                COALESCE(unread.cnt, 0) AS unread_count
+            FROM (
+                SELECT
+                    CASE WHEN sender_id = ? THEN recipient_id ELSE sender_id END AS other_id,
+                    MAX(id) AS last_message_id
+                FROM messages
+                WHERE sender_id = ? OR recipient_id = ?
+                GROUP BY other_id
+            ) AS conv
+            JOIN messages AS latest ON latest.id = conv.last_message_id
+            JOIN users AS other ON other.id = conv.other_id
+            LEFT JOIN (
+                SELECT sender_id, COUNT(*) AS cnt
+                FROM messages
+                WHERE recipient_id = ? AND read_at IS NULL
+                GROUP BY sender_id
+            ) AS unread ON unread.sender_id = conv.other_id
+            ORDER BY latest.created_at DESC
+        `, [myId, myId, myId, myId]);
+
+        res.render("inbox", {
+            conversations,
+            currentUser: req.session.user
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
