@@ -1,0 +1,21 @@
+extends layout
+block content
+  a(href="/inbox" style="display:inline-flex;align-items:center;gap:6px;color:var(--gray-500);font-size:14px;margin-bottom:1.25rem;") ← Back to inbox
+  .card(style="padding:1.5rem;margin-bottom:1.5rem;")
+    h1(style="font-family:var(--font-display);font-weight:400;font-size:24px;margin-bottom:4px;") Conversation with #{otherUser.name}
+    p(style="color:var(--gray-500);font-size:14px;")= otherUser.email
+  .card(style="padding:1.5rem;margin-bottom:1.5rem;max-height:500px;overflow-y:auto;")
+    if messages.length === 0
+      p(style="color:var(--gray-500);text-align:center;") No messages yet. Say hi!
+    else
+      each msg in messages
+        - var isMine = msg.sender_id === currentUser.id
+        div(style=`display:flex;justify-content:${isMine ? 'flex-end' : 'flex-start'};margin-bottom:12px;`)
+          div(style=`max-width:70%;padding:10px 14px;border-radius:12px;background:${isMine ? '#2563eb' : 'var(--gray-100)'};color:${isMine ? 'white' : 'var(--gray-900)'};`)
+            p(style="margin:0;font-size:14px;line-height:1.4;")= msg.body
+            p(style=`margin:4px 0 0 0;font-size:11px;opacity:0.7;color:${isMine ? 'white' : 'var(--gray-500)'};`)= new Date(msg.created_at).toLocaleString()
+  .card(style="padding:1.5rem;")
+    form(method="POST" action=`/messages/${otherUser.id}`)
+      div(style="margin-bottom:12px;")
+        textarea(name="body" required placeholder="Type a message..." rows="3" style="width:100%;padding:10px;border:1px solid var(--gray-200);border-radius:6px;font-size:14px;font-family:inherit;resize:vertical;box-sizing:border-box;")
+      button(type="submit" style="background:#2563eb;color:white;padding:10px 22px;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-weight:500;") Send

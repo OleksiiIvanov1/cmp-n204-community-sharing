@@ -98,3 +98,15 @@ INSERT INTO skills (title, description, user_id, category_id) VALUES
 -- A sample request: Daniela (id 2) requests the Java skill (id 1)
 INSERT INTO requests (skill_id, requester_id) VALUES
   (1, 2);
+  CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    recipient_id INT NOT NULL,
+    body TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    read_at DATETIME NULL,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_recipient_read (recipient_id, read_at),
+    INDEX idx_conversation (sender_id, recipient_id, created_at)
+);

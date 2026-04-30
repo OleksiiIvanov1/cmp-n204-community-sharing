@@ -660,3 +660,95 @@ app.get("/requests", async (req, res) => {
         res.status(500).send(err);
     }
 });
+// ======================
+// MESSAGES — view conversation with a specific user
+// ======================
+app.get("/messages/:userId", async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
+
+        const myId = req.session.user.id;
+        const otherId = parseInt(req.params.userId);
+
+        if (isNaN(otherId) || otherId === myId) {
+            return res.status(400).send("Invalid user");
+        }
+
+        // Get the other user's info
+        const otherRows = await db.query(
+            "SELECT id, name, email FROM users WHERE id = ?",
+            [otherId]
+        );
+        if (!otherRows.length) {
+            return res.status(404).send("User not found");
+        }
+
+        // Get all messages between us, oldest first
+        const messages = await db.query(`
+            SELECT id, sender_id, recipient_id, body, created_at
+            FROM messages
+            WHERE (sender_id = ? AND recipient_id = ?)
+               OR (sender_id = ? AND recipient_id = ?)
+            ORDER BY created_at ASC
+        `, [myId, otherId, otherId, myId]);
+
+        // Mark messages from the other user as read
+        await db.query(`
+            UPDATE messages SET read_at = NOW()
+            WHERE recipient_id = ? AND sender_id = ? AND read_at IS NULL
+        `, [myId, otherId]);
+
+        res.render("conversation", {
+            otherUser: otherRows[0],
+            messages,
+            currentUser: req.session.user
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
+
+// ======================
+// MESSAGES — send a new message
+// ======================
+app.post("/messages/:userId", async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
+
+        const myId = req.session.user.id;
+        const otherId = parseInt(req.params.userId);
+        const { body } = req.body;
+
+        if (isNaN(otherId) || otherId === myId) {
+            return res.status(400).send("Invalid recipient");
+        }
+        if (!body || !body.trim()) {
+            return res.redirect(`/messages/${otherId}`);
+        }
+
+        // Verify recipient exists
+        const recipientRows = await db.query(
+            "SELECT id, name, email FROM users WHERE id = ?",
+            [otherId]
+        );
+        if (!recipientRows.length) {
+            return res.status(404).send("Recipient not found");
+        }
+
+        // Insert the message
+        await db.query(
+            "INSERT INTO messages (sender_id, recipient_id, body) VALUES (?, ?, ?)",
+            [myId, otherId, body.trim()]
+        );
+
+        res.redirect(`/messages/${otherId}`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
