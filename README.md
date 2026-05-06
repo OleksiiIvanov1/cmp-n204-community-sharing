@@ -37,13 +37,36 @@ Tools:
 ---
 
 ## Current Progress
-
 Sprint 1 focused on setting up the repository, Docker environment, and project structure.
 Sprint 2 focused on system design, including user stories, diagrams, wireframes, and database planning.
 Sprint 3 delivered the first dynamic database-driven features: skills listing, skill detail page, create skill, users list and user profile, plus a database test endpoint.
-Sprint 4 is currently in progress, focusing on extending functionality with profile editing, request management, and email notifications.
+
 The application runs in Docker containers using Node.js, Express, MySQL, and Pug.
 
+### Sprint 4 (`shannel-sprint4` branch)
+
+This branch delivers a vertical slice of the original Community Share concept, developed independently after the team explored a different direction. Tracked in PR #74. Highlights:
+
+- **Real database schema** — replaced the placeholder schema (which was a renamed `package-lock.json`) with proper `users`, `categories`, `skills` and `requests` tables, including bcrypt-hashed sample data.
+- **Full authentication** — register, login, logout using `express-session` and `bcrypt`. Smart navigation reflects logged-in state.
+- **Skill exchange flow** — logged-in users can request a skill (with duplicate-prevention and self-request guards). Skill owners get a `/requests` management page with Accept / Reject actions and proper authorisation checks.
+- **Profile page** — view any user's profile and skills offered. Logged-in users can edit their own name, email and password from `/profile/edit`.
+- **Email notifications** — Nodemailer with Ethereal Email sends notification emails on request creation, accept and reject. Preview URLs are logged to the container console for demo purposes.
+- **CI** — GitHub Actions workflow (`.github/workflows/ci.yml`) installs dependencies and runs `node --check` against all JS files in `app/` on every push and pull request.
+
+#### Test logins
+
+The dev database is seeded with sample users — all use the password `password123`:
+
+- `alex@example.com`
+- `daniela@example.com`
+- `ahmed@example.com`
+
+#### Test flow
+
+1. Login as Alex → `/skills` → Request Exchange on a skill owned by Daniela
+2. Logout, login as Daniela → `/requests` → Accept or Reject
+3. Watch the container logs for the email preview URL
 ---
 
 ## Documentation
